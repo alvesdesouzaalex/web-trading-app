@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-indigo-300 to-indigo-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+        </div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="max-w-md mx-auto">
+                <div>
+                    <h1 class="text-2xl font-semibold">{{ isEditMode ? 'Edit Template' : 'New Template' }}</h1>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <form [formGroup]="templateForm" (ngSubmit)="onSubmit()"
+                        class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+
+                        <!-- Fields common or specific to Create Mode -->
+                        <div *ngIf="!isEditMode">
+                            <div class="flex flex-col mb-4">
+                                <label class="leading-loose">Ticker</label>
+                                <input type="text" formControlName="ticker"
+                                    class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                                    placeholder="BTCUSDT">
+                            </div>
+                            <div class="flex flex-col mb-4">
+                                <label class="leading-loose">Category</label>
+                                <input type="text" formControlName="category"
+                                    class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                                    placeholder="Category">
+                            </div>
+                        </div>
+
+                        <!-- Ticker Readonly for Edit Mode -->
+                        <div *ngIf="isEditMode" class="flex flex-col mb-4">
+                            <label class="leading-loose">Ticker</label>
+                            <div
+                                class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-600 sm:text-sm">
+                                {{ tickerId }}</div>
+                        </div>
+
+                        <!-- Common Fields -->
+                        <div class="flex space-x-4">
+                            <div class="flex flex-col w-1/2">
+                                <label class="leading-loose">Min Profit %</label>
+                                <input type="text" formControlName="minProfitPercent"
+                                    class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                            </div>
+                            <div class="flex flex-col w-1/2">
+                                <label class="leading-loose">Margin Profit</label>
+                                <input type="text" formControlName="marginProfit"
+                                    class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <div class="flex flex-col w-1/2">
+                                <label class="leading-loose">Amount</label>
+                                <input type="number" formControlName="amount"
+                                    class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                            </div>
+                            <div class="flex flex-col w-1/2">
+                                <label class="leading-loose">Initial Balance</label>
+                                <input type="number" formControlName="initialBalance"
+                                    class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label class="leading-loose">Total % Allowed</label>
+                            <input type="number" formControlName="totalPercentAllowedToUse"
+                                class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                        </div>
+
+                        <!-- Edit Only Fields -->
+                        <div *ngIf="isEditMode" class="space-y-4">
+                            <div class="flex space-x-4">
+                                <div class="flex flex-col w-1/2">
+                                    <label class="leading-loose">Next Amount</label>
+                                    <input type="number" formControlName="nextAmount"
+                                        class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                                </div>
+                                <div class="flex flex-col w-1/2">
+                                    <label class="leading-loose">Last Net Profit</label>
+                                    <input type="number" formControlName="lastNetProfit"
+                                        class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                                </div>
+                            </div>
+
+                            <div class="flex space-x-4">
+                                <div class="flex flex-col w-1/2">
+                                    <label class="leading-loose">Grid Incr. Value</label>
+                                    <input type="text" formControlName="gridIncrementValue"
+                                        class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                                </div>
+                                <div class="flex flex-col w-1/2">
+                                    <label class="leading-loose">Min Grid Slot Qty</label>
+                                    <input type="number" formControlName="minGridSlotQty"
+                                        class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex items-center space-x-4">
+                            <button type="submit" [disabled]="isLoading || templateForm.invalid"
+                                class="bg-indigo-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none hover:bg-indigo-700 disabled:opacity-50">Save</button>
+                            <a routerLink="/templates"
+                                class="bg-gray-200 flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none hover:bg-gray-300">Cancel</a>
+                        </div>
+
+                        <div *ngIf="error" class="text-red-500 text-sm mt-2">{{ error }}</div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
