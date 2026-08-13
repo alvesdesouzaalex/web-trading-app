@@ -1,0 +1,23 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { WdConfiguration, WorkflowDecisionCreatePayload } from '../models/workflow-decision.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class WorkflowDecisionService {
+  private configUrl = `${environment.apiUrl}/configuration/wd`;
+  private createUrl = `${environment.apiUrl}/workflow-decisions/create`;
+
+  constructor(private http: HttpClient) { }
+
+  getConfiguration(): Observable<WdConfiguration> {
+    return this.http.get<WdConfiguration>(this.configUrl);
+  }
+
+  createWorkflowDecision(payload: WorkflowDecisionCreatePayload): Observable<any> {
+    return this.http.post<any>(this.createUrl, payload);
+  }
+}

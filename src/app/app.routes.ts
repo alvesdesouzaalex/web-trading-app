@@ -4,6 +4,7 @@ import { TemplateListComponent } from './components/template-list/template-list.
 import { TemplateFormComponent } from './components/template-form/template-form.component';
 import { OrderListComponent } from './components/order-list/order-list.component';
 import { SignalFormComponent } from './components/signal-form/signal-form.component';
+import { WorkflowDecisionsComponent } from './components/workflow-decisions/workflow-decisions.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -31,6 +32,11 @@ export const routes: Routes = [
     {
         path: 'trading/signal',
         component: SignalFormComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'workflow-decisions',
+        component: WorkflowDecisionsComponent,
         canActivate: [authGuard]
     },
     { path: '', redirectTo: '/templates', pathMatch: 'full' },
