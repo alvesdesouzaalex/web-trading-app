@@ -24,6 +24,24 @@ describe('WorkflowDecisionsComponent', () => {
     logicalOperators: ['AND', 'OR']
   };
 
+  const mockWorkflowListResponse = {
+    ticker: 'BTCUSDT',
+    timeFrame: '60',
+    decisions: [
+      {
+        strategy: 'RSI_STRATEGY',
+        timeFrame: '60',
+        field: 'minDistancePercent',
+        value: '1.5',
+        operator: 'GREATER_THAN',
+        groupId: 'RSI_OVERSOLD_REVERSING',
+        logicalOperator: 'OR',
+        action: 'OPEN_LONG_POSITION',
+        step: 'MAIN_TIMEFRAME'
+      }
+    ]
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WorkflowDecisionsComponent],
@@ -38,32 +56,35 @@ describe('WorkflowDecisionsComponent', () => {
     service = TestBed.inject(WorkflowDecisionService);
 
     vi.spyOn(service, 'getConfiguration').mockReturnValue(of(mockConfig));
+    vi.spyOn(service, 'getWorkflowDecisionsByTicker').mockReturnValue(of(mockWorkflowListResponse));
     vi.spyOn(service, 'createWorkflowDecision').mockReturnValue(of({ success: true }));
 
     fixture.detectChanges();
   });
 
-  it('should create component and load configuration without infinite spinner', () => {
+  it('should initialize on Tab 1 (Workflows) with BTCUSDT selected by default', () => {
     expect(component).toBeTruthy();
-    expect(component.isLoadingConfig).toBe(false);
-    expect(component.config.tickers).toContain('BTCUSDT');
+    expect(component.activeTab).toBe('workflows');
+    expect(component.selectedTicker).toBe('BTCUSDT');
+    expect(component.workflowList.length).toBe(1);
+    expect(component.workflowList[0].field).toBe('minDistancePercent');
   });
 
-  it('should handle operator change and conditionally show input number for GREATER_THAN', () => {
-    expect(component.isNumberOperator('GREATER_THAN')).toBe(true);
-    expect(component.isNumberOperator('LESS_THAN')).toBe(true);
-    expect(component.isNumberOperator('EQUALS')).toBe(false);
+  it('should switch to Tab 2 (Detail) and present clean form', () => {
+    component.switchTab('detail');
+    expect(component.activeTab).toBe('detail');
+    expect(component.decisions.length).toBe(1);
   });
 
-  it('should auto fill example RSI payload rule and create payload correctly', () => {
-    component.fillExamplePayloadRule();
-    expect(component.workflowForm.get('ticker')?.value).toBe('BTCUSDT');
-    expect(component.workflowForm.get('timeFrame')?.value).toBe('60');
-    expect(component.decisions.length).toBe(3);
+  it('should submit form, reset state, and redirect to Tab 1 with created ticker upon HTTP 200', () => {
+    component.switchTab('detail');
+    component.workflowForm.get('ticker')?.setValue('ETHUSDT');
+    component.workflowForm.get('timeFrame')?.setValue('60');
 
-    const firstDecision = component.decisions.at(0).value;
-    expect(firstDecision.field).toBe('minDistancePercent');
-    expect(firstDecision.operator).toBe('GREATER_THAN');
-    expect(firstDecision.value).toBe('1.5');
+    component.onSubmit();
+
+    expect(component.activeTab).toBe('workflows');
+    expect(component.selectedTicker).toBe('ETHUSDT');
+    expect(service.createWorkflowDecision).toHaveBeenCalled();
   });
 });

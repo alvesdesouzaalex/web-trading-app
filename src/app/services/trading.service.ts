@@ -17,7 +17,7 @@ export class TradingService {
     }
 
     getAllOpenedOrders(): Observable<any[]> { // Adjust return type if OrderHistory specific
-        return this.http.get<any[]>(`${this.apiUrl}/all-opened`);
+        return this.http.get<any[]>(`${this.apiUrl}/open`);
     }
 
     getOrderDetail(orderLinkId: string): Observable<any> {

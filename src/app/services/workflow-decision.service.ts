@@ -10,6 +10,7 @@ import { WdConfiguration, WorkflowDecisionCreatePayload } from '../models/workfl
 export class WorkflowDecisionService {
   private configUrl = `${environment.apiUrl}/configuration/wd`;
   private createUrl = `${environment.apiUrl}/workflow-decisions/create`;
+  private baseUrl = `${environment.apiUrl}/workflow-decisions`;
 
   constructor(private http: HttpClient) { }
 
@@ -19,5 +20,9 @@ export class WorkflowDecisionService {
 
   createWorkflowDecision(payload: WorkflowDecisionCreatePayload): Observable<any> {
     return this.http.post<any>(this.createUrl, payload);
+  }
+
+  getWorkflowDecisionsByTicker(tickerId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${tickerId}`);
   }
 }

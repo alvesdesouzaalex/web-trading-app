@@ -12,7 +12,9 @@ import { WdConfiguration, WorkflowDecisionCreatePayload, WorkflowDecisionItem } 
   templateUrl: './workflow-decisions.component.html',
 })
 export class WorkflowDecisionsComponent implements OnInit {
-  workflowForm!: FormGroup;
+  activeTab: 'workflows' | 'detail' = 'workflows';
+
+  // Config options
   config: WdConfiguration = {
     operators: ['GREATER_THAN', 'LESS_THAN', 'IN', 'EQUALS'],
     groupsIds: [
@@ -84,11 +86,21 @@ export class WorkflowDecisionsComponent implements OnInit {
     logicalOperators: ['AND', 'OR', 'NONE']
   };
 
+  // State for Form Creation (Tab 2: Detail)
+  workflowForm!: FormGroup;
   isLoadingConfig: boolean = false;
   isSubmitting: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
   submittedPayloadJson: string = '';
+
+  // State for Listing (Tab 1: Workflows)
+  selectedTicker: string = 'BTCUSDT';
+  workflowList: WorkflowDecisionItem[] = [];
+  listTickerHeader: string = 'BTCUSDT';
+  listTimeFrameHeader: string = '60';
+  isLoadingList: boolean = false;
+  listErrorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -100,6 +112,7 @@ export class WorkflowDecisionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadConfiguration();
+    this.loadWorkflowList(this.selectedTicker);
   }
 
   private initForm(): void {
@@ -140,6 +153,35 @@ export class WorkflowDecisionsComponent implements OnInit {
       this.decisions.removeAt(index);
       this.cdr.markForCheck();
     }
+  }
+
+  switchTab(tab: 'workflows' | 'detail'): void {
+    this.activeTab = tab;
+    this.errorMessage = '';
+    
+    if (tab === 'detail') {
+      this.resetFormToCleanState();
+    } else if (tab === 'workflows') {
+      this.loadWorkflowList(this.selectedTicker);
+    }
+    this.cdr.markForCheck();
+  }
+
+  resetFormToCleanState(): void {
+    const defaultTicker = this.config.tickers.length > 0 ? this.config.tickers[0] : 'BTCUSDT';
+    const defaultTimeFrame = this.config.timeFrames.length > 0 ? this.config.timeFrames[0] : '60';
+
+    this.workflowForm.reset({
+      ticker: defaultTicker,
+      timeFrame: defaultTimeFrame
+    });
+
+    while (this.decisions.length !== 0) {
+      this.decisions.removeAt(0);
+    }
+    this.addDecision();
+    this.submittedPayloadJson = '';
+    this.cdr.markForCheck();
   }
 
   loadConfiguration(): void {
@@ -205,7 +247,6 @@ export class WorkflowDecisionsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading workflow decision configuration:', err);
-        this.errorMessage = 'Não foi possível se conectar com localhost:8080/trading/configuration/wd. As opções padrão foram carregadas para testes.';
         this.isLoadingConfig = false;
         
         if (this.config.tickers.length > 0 && !this.workflowForm.get('ticker')?.value) {
@@ -224,57 +265,50 @@ export class WorkflowDecisionsComponent implements OnInit {
     });
   }
 
-  fillExamplePayloadRule(): void {
-    this.workflowForm.get('ticker')?.setValue('BTCUSDT');
-    this.workflowForm.get('timeFrame')?.setValue('60');
-
-    // Clear existing decisions
-    while (this.decisions.length !== 0) {
-      this.decisions.removeAt(0);
-    }
-
-    // Add decision 1
-    this.decisions.push(this.createDecisionGroup({
-      strategy: 'RSI_STRATEGY',
-      timeFrame: '60',
-      field: 'minDistancePercent',
-      value: '1.5',
-      operator: 'GREATER_THAN',
-      groupId: 'RSI_OVERSOLD_REVERSING',
-      logicalOperator: 'OR',
-      action: 'OPEN_LONG_POSITION',
-      step: 'MAIN_TIMEFRAME'
-    }));
-
-    // Add decision 2
-    this.decisions.push(this.createDecisionGroup({
-      strategy: 'RSI_STRATEGY',
-      timeFrame: '60',
-      field: 'rsiCurrentPosition',
-      value: 'rsiOversoldReversing',
-      operator: 'EQUALS',
-      groupId: 'RSI_OVERSOLD_REVERSING',
-      logicalOperator: 'OR',
-      action: 'OPEN_LONG_POSITION',
-      step: 'MAIN_TIMEFRAME'
-    }));
-
-    // Add decision 3
-    this.decisions.push(this.createDecisionGroup({
-      strategy: 'RSI_STRATEGY',
-      timeFrame: '60',
-      field: 'rsiCurrentPosition',
-      value: 'rsiOverboughtReversing',
-      operator: 'EQUALS',
-      groupId: 'RSI_OVERBOUGHT_REVERSING',
-      logicalOperator: 'OR',
-      action: 'CLOSE_LONG_POSITION',
-      step: 'MAIN_TIMEFRAME'
-    }));
-
-    this.successMessage = 'Regra de exemplo RSI preenchida no formulário com sucesso!';
-    this.errorMessage = '';
+  loadWorkflowList(ticker: string): void {
+    this.selectedTicker = ticker;
+    this.isLoadingList = true;
+    this.listErrorMessage = '';
     this.cdr.markForCheck();
+
+    this.workflowDecisionService.getWorkflowDecisionsByTicker(ticker).subscribe({
+      next: (response) => {
+        this.listTickerHeader = ticker;
+        
+        if (Array.isArray(response)) {
+          this.workflowList = response;
+          this.listTimeFrameHeader = response.length > 0 ? (response[0].timeFrame || '60') : '60';
+        } else if (response && Array.isArray(response.decisions)) {
+          this.workflowList = response.decisions;
+          this.listTickerHeader = response.ticker || ticker;
+          this.listTimeFrameHeader = response.timeFrame || '60';
+        } else if (response && Array.isArray(response.data)) {
+          this.workflowList = response.data;
+        } else if (typeof response === 'object' && response !== null) {
+          // If response is a single object or dictionary
+          this.workflowList = response.decisions || [response];
+        } else {
+          this.workflowList = [];
+        }
+
+        this.isLoadingList = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(`Error loading workflow decisions for ticker ${ticker}:`, err);
+        this.listErrorMessage = `Erro ao carregar workflows do ticker ${ticker}. Verifique a API GET localhost:8080/trading/workflow-decisions/${ticker}`;
+        this.workflowList = [];
+        this.isLoadingList = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onTickerSelectChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    if (target && target.value) {
+      this.loadWorkflowList(target.value);
+    }
   }
 
   isNumberOperator(operatorValue: string): boolean {
@@ -292,6 +326,14 @@ export class WorkflowDecisionsComponent implements OnInit {
       .join(' ');
   }
 
+  onEditItemPlaceholder(item: WorkflowDecisionItem, index: number): void {
+    console.log('Edit item clicked (placeholder):', item, index);
+  }
+
+  onDeleteItemPlaceholder(item: WorkflowDecisionItem, index: number): void {
+    console.log('Delete item clicked (placeholder):', item, index);
+  }
+
   onSubmit(): void {
     if (this.workflowForm.invalid) {
       this.workflowForm.markAllAsTouched();
@@ -307,8 +349,10 @@ export class WorkflowDecisionsComponent implements OnInit {
     this.cdr.markForCheck();
 
     const formValues = this.workflowForm.getRawValue();
+    const createdTicker = formValues.ticker;
+
     const payload: WorkflowDecisionCreatePayload = {
-      ticker: formValues.ticker,
+      ticker: createdTicker,
       timeFrame: formValues.timeFrame,
       decisions: formValues.decisions.map((item: any) => ({
         strategy: item.strategy,
@@ -323,12 +367,17 @@ export class WorkflowDecisionsComponent implements OnInit {
       }))
     };
 
-    this.submittedPayloadJson = JSON.stringify(payload, null, 2);
-
     this.workflowDecisionService.createWorkflowDecision(payload).subscribe({
       next: (response) => {
-        this.successMessage = 'Workflow Decision cadastrado com sucesso!';
         this.isSubmitting = false;
+        
+        // Rule 5: Upon 200 response, clean the form and redirect to Tab 1 (Workflows) with the created ticker
+        this.resetFormToCleanState();
+        this.selectedTicker = createdTicker;
+        this.activeTab = 'workflows';
+        this.loadWorkflowList(createdTicker);
+
+        this.successMessage = `Workflow Decision cadastrado com sucesso para o ticker ${createdTicker}!`;
         this.cdr.detectChanges();
       },
       error: (err) => {

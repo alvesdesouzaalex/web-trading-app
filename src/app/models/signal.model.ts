@@ -27,5 +27,8 @@ export interface OrderHistory {
     strategy: string;
     indicator: string;
     execPrice: number;
+    realTimeProfitPercent: number;
+    openHours: number;
+    amount: number;
     execValue: string;
 }
