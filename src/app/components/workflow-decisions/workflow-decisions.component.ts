@@ -102,6 +102,12 @@ export class WorkflowDecisionsComponent implements OnInit {
   isLoadingList: boolean = false;
   listErrorMessage: string = '';
 
+  // State for Delete Confirmation Modal
+  showDeleteModal: boolean = false;
+  itemToDelete: WorkflowDecisionItem | null = null;
+  isDeleting: boolean = false;
+  deleteErrorMessage: string = '';
+
   constructor(
     private fb: FormBuilder,
     private workflowDecisionService: WorkflowDecisionService,
@@ -331,7 +337,62 @@ export class WorkflowDecisionsComponent implements OnInit {
   }
 
   onDeleteItemPlaceholder(item: WorkflowDecisionItem, index: number): void {
-    console.log('Delete item clicked (placeholder):', item, index);
+    this.openDeleteModal(item);
+  }
+
+  openDeleteModal(item: WorkflowDecisionItem): void {
+    this.itemToDelete = item;
+    this.showDeleteModal = true;
+    this.deleteErrorMessage = '';
+    this.cdr.markForCheck();
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.itemToDelete = null;
+    this.isDeleting = false;
+    this.deleteErrorMessage = '';
+    this.cdr.markForCheck();
+  }
+
+  confirmDelete(): void {
+    if (!this.itemToDelete) {
+      this.closeDeleteModal();
+      return;
+    }
+
+    const id = this.itemToDelete.id;
+    if (id === undefined || id === null) {
+      console.warn('Item selecionado para exclusão não possui ID válido.');
+      this.closeDeleteModal();
+      return;
+    }
+
+    this.isDeleting = true;
+    this.deleteErrorMessage = '';
+    this.cdr.markForCheck();
+
+    this.workflowDecisionService.deleteWorkflowDecisionsById(id).subscribe({
+      next: (response: any) => {
+        this.isDeleting = false;
+        // Rule 2: Se tiver o retorno de 204 (ou sucesso da transação), chamar a rota de listagem novamente
+        const status = response?.status;
+        if (status === 204 || status === 200 || response === null || response === undefined || response?.success !== false) {
+          this.successMessage = `Workflow Decision #${id} excluído com sucesso!`;
+          this.closeDeleteModal();
+          this.loadWorkflowList(this.selectedTicker);
+        } else {
+          this.closeDeleteModal();
+          this.loadWorkflowList(this.selectedTicker);
+        }
+      },
+      error: (err) => {
+        console.error(`Erro ao excluir Workflow Decision #${id}:`, err);
+        this.deleteErrorMessage = `Falha ao excluir Workflow Decision #${id}. Verifique a API DELETE.`;
+        this.isDeleting = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onSubmit(): void {

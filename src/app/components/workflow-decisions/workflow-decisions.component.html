@@ -261,8 +261,8 @@
                   <!-- Delete Icon (Trash) -->
                   <button
                     type="button"
-                    (click)="onDeleteItemPlaceholder(item, idx)"
-                    class="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-gray-700 transition-colors"
+                    (click)="openDeleteModal(item)"
+                    class="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-gray-700 transition-colors cursor-pointer"
                     title="Excluir item do workflow"
                   >
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -571,5 +571,89 @@
         </button>
       </div>
     </form>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteModal" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Overlay Backdrop -->
+    <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm transition-opacity" (click)="closeDeleteModal()"></div>
+
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="relative transform overflow-hidden rounded-2xl bg-gray-800 border border-gray-700 px-4 pb-4 pt-5 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+          
+          <!-- Close (X) Button -->
+          <div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+            <button
+              type="button"
+              (click)="closeDeleteModal()"
+              class="rounded-lg bg-gray-800 text-gray-400 hover:text-gray-200 focus:outline-none p-1 transition-colors"
+            >
+              <span class="sr-only">Fechar</span>
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="sm:flex sm:items-start">
+            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-950/80 border border-rose-800 sm:mx-0 sm:h-10 sm:w-10">
+              <svg class="h-6 w-6 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            
+            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+              <h3 class="text-lg font-semibold leading-6 text-white" id="modal-title">
+                Confirmar Exclusão de Workflow Decision
+              </h3>
+              
+              <div class="mt-3 text-sm text-gray-300 space-y-2">
+                <p>Tem certeza que deseja excluir esta regra de decisão?</p>
+                <div *ngIf="itemToDelete" class="bg-gray-900/90 rounded-lg p-3 border border-gray-700 text-xs font-mono text-gray-300 space-y-1">
+                  <div *ngIf="itemToDelete.id"><span class="text-gray-400">ID:</span> <span class="text-white font-bold">#{{ itemToDelete.id }}</span></div>
+                  <div><span class="text-gray-400">Estratégia:</span> <span class="text-indigo-300">{{ itemToDelete.strategy }}</span></div>
+                  <div><span class="text-gray-400">Campo:</span> <span class="text-amber-300">{{ itemToDelete.field }}</span> {{ itemToDelete.operator }} <span class="text-emerald-300">{{ itemToDelete.value }}</span></div>
+                  <div><span class="text-gray-400">Ação:</span> <span class="text-gray-200">{{ itemToDelete.action }}</span></div>
+                </div>
+              </div>
+
+              <!-- Error inside modal if any -->
+              <div *ngIf="deleteErrorMessage" class="mt-3 rounded-md bg-red-900/50 border border-red-500 p-3 text-xs text-red-200">
+                {{ deleteErrorMessage }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons: Sim & Não -->
+          <div class="mt-6 sm:mt-5 sm:flex sm:flex-row-reverse gap-3">
+            <!-- Sim (Confirm Delete) -->
+            <button
+              type="button"
+              (click)="confirmDelete()"
+              [disabled]="isDeleting"
+              class="inline-flex w-full justify-center rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:opacity-50 sm:w-auto transition-colors cursor-pointer"
+            >
+              <svg *ngIf="isDeleting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {{ isDeleting ? 'Excluindo...' : 'Sim' }}
+            </button>
+            
+            <!-- Não (Cancel & Close) -->
+            <button
+              type="button"
+              (click)="closeDeleteModal()"
+              [disabled]="isDeleting"
+              class="mt-3 inline-flex w-full justify-center rounded-lg bg-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 shadow-sm hover:bg-gray-600 sm:mt-0 sm:w-auto transition-colors cursor-pointer"
+            >
+              Não
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </div>

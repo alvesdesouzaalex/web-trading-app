@@ -87,4 +87,28 @@ describe('WorkflowDecisionsComponent', () => {
     expect(component.selectedTicker).toBe('ETHUSDT');
     expect(service.createWorkflowDecision).toHaveBeenCalled();
   });
+
+  it('should open delete confirmation modal when delete action is triggered and close on Nao', () => {
+    const item = { id: 10, strategy: 'RSI_STRATEGY', timeFrame: '60', field: 'EMA_9', value: 'NONE', operator: 'EQUALS', groupId: 'DEFAULT', logicalOperator: 'OR', action: 'DEFAULT', step: 'MAIN_TIMEFRAME' };
+    component.openDeleteModal(item);
+    expect(component.showDeleteModal).toBe(true);
+    expect(component.itemToDelete).toEqual(item);
+
+    component.closeDeleteModal();
+    expect(component.showDeleteModal).toBe(false);
+    expect(component.itemToDelete).toBeNull();
+  });
+
+  it('should call deleteWorkflowDecisionsById and refresh workflow list when Sim is clicked and 204 is returned', () => {
+    const item = { id: 42, strategy: 'RSI_STRATEGY', timeFrame: '60', field: 'minDistancePercent', value: '1.5', operator: 'GREATER_THAN', groupId: 'DEFAULT', logicalOperator: 'OR', action: 'DEFAULT', step: 'MAIN_TIMEFRAME' };
+    vi.spyOn(service, 'deleteWorkflowDecisionsById').mockReturnValue(of({ status: 204 }));
+    const loadListSpy = vi.spyOn(component, 'loadWorkflowList');
+
+    component.openDeleteModal(item);
+    component.confirmDelete();
+
+    expect(service.deleteWorkflowDecisionsById).toHaveBeenCalledWith(42);
+    expect(component.showDeleteModal).toBe(false);
+    expect(loadListSpy).toHaveBeenCalledWith('BTCUSDT');
+  });
 });

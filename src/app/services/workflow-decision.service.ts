@@ -25,4 +25,8 @@ export class WorkflowDecisionService {
   getWorkflowDecisionsByTicker(tickerId: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${tickerId}`);
   }
+
+  deleteWorkflowDecisionsById(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${id}`, { observe: 'response' });
+  }
 }

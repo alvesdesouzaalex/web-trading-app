@@ -12,6 +12,7 @@ export interface WdConfiguration {
 }
 
 export interface WorkflowDecisionItem {
+  id?: number;
   strategy: string;
   timeFrame: string;
   field: string;
