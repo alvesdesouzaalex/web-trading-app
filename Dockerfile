@@ -5,16 +5,12 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copy dependency files first to leverage Docker cache
 COPY package*.json ./
 
-# Install dependencies
 RUN npm ci
 
-# Copy application source
 COPY . .
 
-# Build Angular application
 RUN npm run build
 
 
@@ -23,11 +19,16 @@ RUN npm run build
 # ==========================================
 FROM nginx:alpine
 
-# Copy Angular build
-COPY --from=build /app/dist/web-trading-app/browser /usr/share/nginx/html
+COPY --from=build \
+    /app/dist/web-trading-app/browser \
+    /usr/share/nginx/html
 
-# Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY docker-entrypoint.d/40-env.sh \
+    /docker-entrypoint.d/40-env.sh
+
+RUN chmod +x /docker-entrypoint.d/40-env.sh
 
 EXPOSE 80
 
