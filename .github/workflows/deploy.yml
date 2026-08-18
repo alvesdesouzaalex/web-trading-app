@@ -1,0 +1,89 @@
+name: Build and Deploy Web Trading App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t web-trading-app:latest \
+            .
+
+      - name: Export Docker image
+        run: |
+          docker save web-trading-app:latest | gzip > web-trading-app.tar.gz
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-trading-app-image
+          path: web-trading-app.tar.gz
+          retention-days: 1
+
+
+  deploy:
+    name: Deploy to Linode
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-trading-app-image
+          path: .
+
+      - name: Copy Docker image to Linode
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.LINODE_IP }}
+          username: ${{ secrets.LINODE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: web-trading-app.tar.gz
+          target: /tmp/
+
+      - name: Deploy Web Trading App
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.LINODE_IP }}
+          username: ${{ secrets.LINODE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Loading Docker image..."
+
+            docker load -i /tmp/web-trading-app.tar.gz
+
+            echo "Stopping previous container..."
+
+            docker stop web-trading-app || true
+
+            echo "Removing previous container..."
+
+            docker rm web-trading-app || true
+
+            echo "Starting new container..."
+
+            docker run -d \
+              --name web-trading-app \
+              --restart unless-stopped \
+              -p 80:80 \
+              web-trading-app:latest
+
+            echo "Removing temporary Docker image file..."
+
+            rm -f /tmp/web-trading-app.tar.gz
+
+            echo "Checking container status..."
+
+            docker ps --filter "name=web-trading-app"
