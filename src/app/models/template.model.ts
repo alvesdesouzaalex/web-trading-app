@@ -2,6 +2,7 @@ export interface Template {
     ticker: string;
     symbol?: string;
     category: string;
+    active?: boolean;
     totalPercentAllowedToUse?: number;
     minProfitPercent: string;
     marginProfit: string;

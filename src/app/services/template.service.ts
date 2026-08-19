@@ -27,4 +27,12 @@ export class TemplateService {
     updateTemplate(id: string, template: TemplateUpdateDto): Observable<TemplateUpdateDto> {
         return this.http.put<TemplateUpdateDto>(`${this.apiUrl}/${id}`, template);
     }
+
+    toggleActiveInactive(ticker: string): Observable<any> {
+        return this.http.patch<any>(`${this.apiUrl}/${ticker}/active-inactive`, {}, { observe: 'response' });
+    }
+
+    deleteTemplate(ticker: string): Observable<any> {
+        return this.http.delete<any>(`${this.apiUrl}/${ticker}`, { observe: 'response' });
+    }
 }
