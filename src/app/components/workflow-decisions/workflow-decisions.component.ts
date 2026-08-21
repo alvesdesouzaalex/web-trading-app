@@ -74,6 +74,16 @@ export class WorkflowDecisionsComponent implements OnInit {
       'STOCHASTIC_STRATEGY',
       'CLOSE_POSITION_STRATEGY'
     ],
+    strategiesType: [
+      'DEFAULT',
+      'EMA_TREND_STRATEGY',
+      'EMA_CROSSING_STRATEGY',
+      'DCA_STRATEGY',
+      'RSI_STRATEGY',
+      'EKC_STRATEGY',
+      'STOCHASTIC_STRATEGY',
+      'CLOSE_POSITION_STRATEGY'
+    ],
     steps: [
       'PRE_VALIDATION',
       'MAIN_VALIDATION',
@@ -135,15 +145,19 @@ export class WorkflowDecisionsComponent implements OnInit {
 
   createDecisionGroup(initialValues?: Partial<WorkflowDecisionItem>): FormGroup {
     const defaultTimeFrame = this.workflowForm.get('timeFrame')?.value || (this.config.timeFrames.length > 0 ? this.config.timeFrames[0] : '60');
-    
+    const defaultStrategyType = (this.config.strategiesType && this.config.strategiesType.length > 0)
+      ? this.config.strategiesType[0]
+      : (this.config.strategies.length > 0 ? this.config.strategies[0] : 'DEFAULT');
+
     return this.fb.group({
       field: [initialValues?.field ?? (this.config.fields[0] || 'EMA_9'), Validators.required],
       operator: [initialValues?.operator ?? (this.config.operators[0] || 'EQUALS'), Validators.required],
       value: [initialValues?.value ?? (this.config.values[0] || 'NONE'), Validators.required],
       step: [initialValues?.step ?? (this.config.steps[0] || 'MAIN_TIMEFRAME'), Validators.required],
       strategy: [initialValues?.strategy ?? (this.config.strategies[0] || 'DEFAULT'), Validators.required],
+      strategyType: [initialValues?.strategyType ?? defaultStrategyType, Validators.required],
       action: [initialValues?.action ?? (this.config.actions[0] || 'DEFAULT'), Validators.required],
-      groupId: [initialValues?.groupId ?? (this.config.groupsIds[0] || 'DEFAULT'), Validators.required],
+      groupId: [initialValues?.groupId ?? 1, [Validators.required, Validators.min(0)]],
       logicalOperator: [initialValues?.logicalOperator ?? 'OR', Validators.required],
       timeFrame: [initialValues?.timeFrame ?? defaultTimeFrame, Validators.required]
     });
@@ -207,25 +221,23 @@ export class WorkflowDecisionsComponent implements OnInit {
             'rsiCurrentPosition'
           ]));
 
-          const groupsIds = Array.from(new Set([
-            ...ensureArray(rawConfig.groupsIds),
-            'RSI_OVERSOLD_REVERSING',
-            'RSI_OVERBOUGHT_REVERSING'
-          ]));
-
           const values = Array.from(new Set([
             ...ensureArray(rawConfig.values),
             'rsiOversoldReversing',
             'rsiOverboughtReversing'
           ]));
 
+          const strategiesType = ensureArray(rawConfig.strategiesType).length > 0
+            ? rawConfig.strategiesType
+            : (ensureArray(rawConfig.strategies).length > 0 ? rawConfig.strategies : this.config.strategies);
+
           this.config = {
             operators: ensureArray(rawConfig.operators).length ? rawConfig.operators : this.config.operators,
-            groupsIds: groupsIds.length ? groupsIds : this.config.groupsIds,
             fields: fields.length ? fields : this.config.fields,
             values: values.length ? values : this.config.values,
             actions: ensureArray(rawConfig.actions).length ? rawConfig.actions : this.config.actions,
             strategies: ensureArray(rawConfig.strategies).length ? rawConfig.strategies : this.config.strategies,
+            strategiesType: strategiesType,
             steps: ensureArray(rawConfig.steps).length ? rawConfig.steps : this.config.steps,
             tickers: ensureArray(rawConfig.tickers).length ? rawConfig.tickers : this.config.tickers,
             timeFrames: ensureArray(rawConfig.timeFrames).length ? rawConfig.timeFrames : this.config.timeFrames,
@@ -321,12 +333,13 @@ export class WorkflowDecisionsComponent implements OnInit {
     return operatorValue === 'GREATER_THAN' || operatorValue === 'LESS_THAN';
   }
 
-  formatLabel(value: string): string {
-    if (!value) return '';
-    if (/^\d+$/.test(value)) {
-      return `${value} min`;
+  formatLabel(value: string | number | undefined | null): string {
+    if (value === null || value === undefined) return '';
+    const str = String(value);
+    if (/^\d+$/.test(str)) {
+      return str;
     }
-    return value
+    return str
       .split('_')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
@@ -417,11 +430,12 @@ export class WorkflowDecisionsComponent implements OnInit {
       timeFrame: formValues.timeFrame,
       decisions: formValues.decisions.map((item: any) => ({
         strategy: item.strategy,
+        strategyType: item.strategyType,
         timeFrame: item.timeFrame || formValues.timeFrame,
         field: item.field,
         value: String(item.value),
         operator: item.operator,
-        groupId: item.groupId,
+        groupId: Number(item.groupId),
         logicalOperator: item.logicalOperator,
         action: item.action,
         step: item.step

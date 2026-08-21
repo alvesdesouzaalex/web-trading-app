@@ -198,7 +198,6 @@
               <th scope="col" class="px-4 py-3.5 font-semibold">Valor</th>
               <th scope="col" class="px-4 py-3.5 font-semibold">Ação</th>
               <th scope="col" class="px-4 py-3.5 font-semibold">Grupo</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Op. Lógico</th>
               <th scope="col" class="px-4 py-3.5 font-semibold text-right">Ações</th>
             </tr>
           </thead>
@@ -234,13 +233,8 @@
                   {{ formatLabel(item.action) }}
                 </span>
               </td>
-              <td class="px-4 py-3.5 text-xs text-gray-400">
-                {{ formatLabel(item.groupId) }}
-              </td>
-              <td class="px-4 py-3.5">
-                <span class="px-2 py-0.5 text-xs font-mono font-bold rounded bg-gray-900 text-indigo-300 border border-gray-700">
-                  {{ item.logicalOperator }}
-                </span>
+              <td class="px-4 py-3.5 text-xs text-gray-400 font-mono font-semibold">
+                {{ item.groupId }}
               </td>
               
               <!-- Rule 6: Action Icons (Edit & Delete placeholders) -->
@@ -503,7 +497,23 @@
                 </select>
               </div>
 
-              <!-- 8. Actions (Select Box) -->
+              <!-- 8. StrategyType (Select Box) -->
+              <div>
+                <label class="block text-xs font-medium text-gray-300 mb-1">
+                  Strategy Type (Tipo de Estratégia) <span class="text-red-400">*</span>
+                </label>
+                <select
+                  formControlName="strategyType"
+                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                >
+                  <option value="" disabled>Selecione o tipo de estratégia...</option>
+                  <option *ngFor="let stType of (config.strategiesType || config.strategies)" [value]="stType">
+                    {{ formatLabel(stType) }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- 9. Actions (Select Box) -->
               <div>
                 <label class="block text-xs font-medium text-gray-300 mb-1">
                   Actions (Ação) <span class="text-red-400">*</span>
@@ -519,37 +529,36 @@
                 </select>
               </div>
 
-              <!-- 9. GroupsIds (Select Box) -->
+              <!-- 10. GroupId (Integer Input) -->
               <div>
                 <label class="block text-xs font-medium text-gray-300 mb-1">
-                  GroupsIds (Grupo) <span class="text-red-400">*</span>
+                  GroupId (Grupo ID) <span class="text-red-400">*</span>
                 </label>
-                <select
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
                   formControlName="groupId"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione o grupo...</option>
-                  <option *ngFor="let g of config.groupsIds" [value]="g">
-                    {{ formatLabel(g) }}
-                  </option>
-                </select>
+                  placeholder="Ex: 1"
+                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
+                />
               </div>
 
               <!-- Logical Operator (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Logical Operator (Operador Lógico) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="logicalOperator"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione operador lógico...</option>
-                  <option *ngFor="let lo of config.logicalOperators" [value]="lo">
-                    {{ lo }}
-                  </option>
-                </select>
-              </div>
+<!--              <div>-->
+<!--                <label class="block text-xs font-medium text-gray-300 mb-1">-->
+<!--                  Logical Operator (Operador Lógico) <span class="text-red-400">*</span>-->
+<!--                </label>-->
+<!--                <select-->
+<!--                  formControlName="logicalOperator"-->
+<!--                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"-->
+<!--                >-->
+<!--                  <option value="" disabled>Selecione operador lógico...</option>-->
+<!--                  <option *ngFor="let lo of config.logicalOperators" [value]="lo">-->
+<!--                    {{ lo }}-->
+<!--                  </option>-->
+<!--                </select>-->
+<!--              </div>-->
 
             </div>
           </div>
