@@ -33,4 +33,8 @@ export class WorkflowDecisionService {
   updateWorkflowDecision(id: number, payload: Partial<WorkflowDecisionItem>): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/${id}`, payload, { observe: 'response' });
   }
+
+  cloneWorkflow(payload: { tickerToClone: string; newTicker: string }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/clone`, payload);
+  }
 }

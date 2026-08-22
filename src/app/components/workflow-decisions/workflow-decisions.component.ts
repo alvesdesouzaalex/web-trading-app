@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { WorkflowDecisionService } from '../../services/workflow-decision.service';
-import { WdConfiguration, WorkflowDecisionCreatePayload, WorkflowDecisionItem } from '../../models/workflow-decision.model';
+import { TemplateService } from '../../services/template.service';
+import { WdConfiguration, WorkflowDecisionCreatePayload, WorkflowDecisionItem, WorkflowClonePayload } from '../../models/workflow-decision.model';
 
 @Component({
   selector: 'app-workflow-decisions',
@@ -124,9 +125,18 @@ export class WorkflowDecisionsComponent implements OnInit {
   isUpdating: boolean = false;
   editErrorMessage: string = '';
 
+  // State for Clone Modal
+  showCloneModal: boolean = false;
+  cloneForm!: FormGroup;
+  cloneTemplateTickers: string[] = [];
+  isLoadingCloneTemplates: boolean = false;
+  isCloning: boolean = false;
+  cloneErrorMessage: string = '';
+
   constructor(
     private fb: FormBuilder,
     private workflowDecisionService: WorkflowDecisionService,
+    private templateService: TemplateService,
     private cdr: ChangeDetectorRef
   ) {
     this.initForm();
@@ -358,8 +368,6 @@ export class WorkflowDecisionsComponent implements OnInit {
 
     this.editForm = this.fb.group({
       id: [item.id],
-      tickerId: [{ value: item.tickerId, disabled: true }],
-      ticker: item.ticker,
       strategy: [item.strategy || (this.config.strategies[0] || 'DEFAULT'), Validators.required],
       strategyType: [item.strategyType || defaultStrategyType, Validators.required],
       timeFrame: [item.timeFrame || '60', Validators.required],
@@ -412,8 +420,6 @@ export class WorkflowDecisionsComponent implements OnInit {
     const payload: Partial<WorkflowDecisionItem> = {
       id: id,
       strategy: formValues.strategy,
-      ticker: formValues.ticker,
-      tickerId: formValues.tickerId,
       strategyType: formValues.strategyType,
       timeFrame: formValues.timeFrame,
       field: formValues.field,
@@ -555,6 +561,89 @@ export class WorkflowDecisionsComponent implements OnInit {
         console.error('Error creating workflow decision:', err);
         this.errorMessage = 'Falha ao cadastrar Workflow Decision. Verifique a API POST localhost:8080/trading/workflow-decisions/create';
         this.isSubmitting = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Clone Workflow Modal Methods
+  initCloneForm(): void {
+    const defaultTickerToClone = (this.cloneTemplateTickers.length > 0)
+      ? this.cloneTemplateTickers[0]
+      : (this.config.tickers[0] || 'BTCUSDT');
+
+    this.cloneForm = this.fb.group({
+      tickerToClone: [defaultTickerToClone, Validators.required],
+      newTicker: ['', [Validators.required]]
+    });
+  }
+
+  openCloneModal(): void {
+    this.showCloneModal = true;
+    this.cloneErrorMessage = '';
+    this.isLoadingCloneTemplates = true;
+    this.cdr.markForCheck();
+
+    this.templateService.getAllTemplates().subscribe({
+      next: (templates) => {
+        this.isLoadingCloneTemplates = false;
+        if (Array.isArray(templates) && templates.length > 0) {
+          this.cloneTemplateTickers = templates.map(t => t.ticker).filter(Boolean);
+        } else {
+          this.cloneTemplateTickers = this.config.tickers || ['BTCUSDT'];
+        }
+        this.initCloneForm();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading template tickers for cloning:', err);
+        this.isLoadingCloneTemplates = false;
+        this.cloneTemplateTickers = this.config.tickers || ['BTCUSDT'];
+        this.initCloneForm();
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  closeCloneModal(): void {
+    this.showCloneModal = false;
+    this.isCloning = false;
+    this.cloneErrorMessage = '';
+    this.cdr.markForCheck();
+  }
+
+  confirmClone(): void {
+    if (this.cloneForm.invalid) {
+      this.cloneForm.markAllAsTouched();
+      this.cloneErrorMessage = 'Por favor, preencha todos os campos do formulário de clonagem.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    const formValues = this.cloneForm.getRawValue();
+    const payload: WorkflowClonePayload = {
+      tickerToClone: formValues.tickerToClone,
+      newTicker: String(formValues.newTicker).trim().toUpperCase()
+    };
+
+    this.isCloning = true;
+    this.cloneErrorMessage = '';
+    this.cdr.markForCheck();
+
+    this.workflowDecisionService.cloneWorkflow(payload).subscribe({
+      next: (response) => {
+        this.isCloning = false;
+        this.closeCloneModal();
+        this.selectedTicker = payload.newTicker;
+        this.activeTab = 'workflows';
+        this.loadWorkflowList(payload.newTicker);
+        this.successMessage = `Workflow clonado com sucesso de ${payload.tickerToClone} para ${payload.newTicker}!`;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao clonar workflow:', err);
+        this.cloneErrorMessage = `Falha ao clonar workflow de ${payload.tickerToClone} para ${payload.newTicker}. Verifique a API POST /workflow-decisions/clone.`;
+        this.isCloning = false;
         this.cdr.detectChanges();
       }
     });

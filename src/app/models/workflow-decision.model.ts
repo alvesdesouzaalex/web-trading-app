@@ -13,8 +13,8 @@ export interface WdConfiguration {
 
 export interface WorkflowDecisionItem {
   id?: number;
-  tickerId: string;
-  ticker: string;
+  tickerId?: string;
+  ticker?: string;
   strategy: string;
   strategyType: string;
   timeFrame: string;
@@ -30,4 +30,9 @@ export interface WorkflowDecisionCreatePayload {
   ticker: string;
   timeFrame: string;
   decisions: WorkflowDecisionItem[];
+}
+
+export interface WorkflowClonePayload {
+  tickerToClone: string;
+  newTicker: string;
 }
