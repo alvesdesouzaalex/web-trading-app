@@ -358,7 +358,7 @@ export class WorkflowDecisionsComponent implements OnInit {
 
     this.editForm = this.fb.group({
       id: [item.id],
-      tickerId: item.tickerId,
+      tickerId: [{ value: item.tickerId, disabled: true }],
       ticker: item.ticker,
       strategy: [item.strategy || (this.config.strategies[0] || 'DEFAULT'), Validators.required],
       strategyType: [item.strategyType || defaultStrategyType, Validators.required],
