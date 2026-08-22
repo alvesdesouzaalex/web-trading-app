@@ -1,230 +1,241 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-  
-  <!-- Main Header & Title -->
-  <div class="md:flex md:items-center md:justify-between mb-6">
-    <div class="min-w-0 flex-1">
-      <h2 class="text-2xl font-bold leading-7 text-white sm:truncate sm:text-3xl sm:tracking-tight flex items-center gap-3">
+
+    <!-- Main Header & Title -->
+    <div class="md:flex md:items-center md:justify-between mb-6">
+        <div class="min-w-0 flex-1">
+            <h2 class="text-2xl font-bold leading-7 text-white sm:truncate sm:text-3xl sm:tracking-tight flex items-center gap-3">
         <span class="p-2 bg-indigo-600 rounded-lg text-white shadow-lg">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
           </svg>
         </span>
-        Workflow Decisions
-      </h2>
-      <p class="mt-1 text-sm text-gray-400">
-        Gerenciamento e cadastro de regras de decisão de trading workflow.
-      </p>
+                Workflow Decisions
+            </h2>
+            <p class="mt-1 text-sm text-gray-400">
+                Gerenciamento e cadastro de regras de decisão de trading workflow.
+            </p>
+        </div>
     </div>
-  </div>
 
-  <!-- Navigation Tabs (Aba 1: Workflows | Aba 2: Detail) -->
-  <div class="border-b border-gray-700 mb-8">
-    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-      <!-- Aba 1: Workflows -->
-      <button
-        type="button"
-        (click)="switchTab('workflows')"
-        [ngClass]="{
+    <!-- Navigation Tabs (Aba 1: Workflows | Aba 2: Detail) -->
+    <div class="border-b border-gray-700 mb-8">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <!-- Aba 1: Workflows -->
+            <button
+                    type="button"
+                    (click)="switchTab('workflows')"
+                    [ngClass]="{
           'border-indigo-500 text-indigo-400 font-semibold bg-gray-800/60': activeTab === 'workflows',
           'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500': activeTab !== 'workflows'
         }"
-        class="group inline-flex items-center px-4 py-3 border-b-2 text-sm font-medium rounded-t-lg transition-all duration-150 cursor-pointer"
-      >
-        <svg
-          [ngClass]="{'text-indigo-400': activeTab === 'workflows', 'text-gray-500 group-hover:text-gray-400': activeTab !== 'workflows'}"
-          class="-ml-0.5 mr-2.5 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-        </svg>
-        Workflows
-        <span
-          *ngIf="activeTab === 'workflows'"
-          class="ml-2 py-0.5 px-2 text-xs font-medium rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800"
-        >
+                    class="group inline-flex items-center px-4 py-3 border-b-2 text-sm font-medium rounded-t-lg transition-all duration-150 cursor-pointer"
+            >
+                <svg
+                        [ngClass]="{'text-indigo-400': activeTab === 'workflows', 'text-gray-500 group-hover:text-gray-400': activeTab !== 'workflows'}"
+                        class="-ml-0.5 mr-2.5 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                </svg>
+                Workflows
+                <span
+                        *ngIf="activeTab === 'workflows'"
+                        class="ml-2 py-0.5 px-2 text-xs font-medium rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800"
+                >
           {{ selectedTicker }}
         </span>
-      </button>
+            </button>
 
-      <!-- Aba 2: Detail -->
-      <button
-        type="button"
-        (click)="switchTab('detail')"
-        [ngClass]="{
+            <!-- Aba 2: Detail -->
+            <button
+                    type="button"
+                    (click)="switchTab('detail')"
+                    [ngClass]="{
           'border-indigo-500 text-indigo-400 font-semibold bg-gray-800/60': activeTab === 'detail',
           'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500': activeTab !== 'detail'
         }"
-        class="group inline-flex items-center px-4 py-3 border-b-2 text-sm font-medium rounded-t-lg transition-all duration-150 cursor-pointer"
-      >
-        <svg
-          [ngClass]="{'text-indigo-400': activeTab === 'detail', 'text-gray-500 group-hover:text-gray-400': activeTab !== 'detail'}"
-          class="-ml-0.5 mr-2.5 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Detail
-      </button>
-    </nav>
-  </div>
-
-  <!-- Global Success Message Banner -->
-  <div *ngIf="successMessage" class="mb-6 rounded-md bg-emerald-900/50 border border-emerald-500 p-4">
-    <div class="flex">
-      <div class="flex-shrink-0">
-        <svg class="h-5 w-5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-      </div>
-      <div class="ml-3">
-        <h3 class="text-sm font-medium text-emerald-200">Sucesso!</h3>
-        <div class="mt-1 text-sm text-emerald-300">{{ successMessage }}</div>
-      </div>
+                    class="group inline-flex items-center px-4 py-3 border-b-2 text-sm font-medium rounded-t-lg transition-all duration-150 cursor-pointer"
+            >
+                <svg
+                        [ngClass]="{'text-indigo-400': activeTab === 'detail', 'text-gray-500 group-hover:text-gray-400': activeTab !== 'detail'}"
+                        class="-ml-0.5 mr-2.5 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Detail
+            </button>
+        </nav>
     </div>
-  </div>
 
-  <!-- ========================================================================= -->
-  <!-- TAB 1: WORKFLOWS LIST (Aba 1) -->
-  <!-- ========================================================================= -->
-  <div *ngIf="activeTab === 'workflows'" class="space-y-6">
-    
-    <!-- Ticker Filter Toolbar -->
-    <div class="bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div class="flex items-center space-x-3">
-        <label for="tickerFilter" class="text-sm font-medium text-gray-300">
-          Selecione o Ticker:
-        </label>
-        <select
-          id="tickerFilter"
-          [value]="selectedTicker"
-          (change)="onTickerSelectChange($event)"
-          class="rounded-lg border-gray-600 bg-gray-900 text-white font-semibold text-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer min-w-[160px]"
-        >
-          <option *ngFor="let t of config.tickers" [value]="t">
-            {{ t }}
-          </option>
-        </select>
-      </div>
+    <!-- Global Success Message Banner -->
+    <div *ngIf="successMessage" class="mb-6 rounded-md bg-emerald-900/50 border border-emerald-500 p-4">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-emerald-200">Sucesso!</h3>
+                <div class="mt-1 text-sm text-emerald-300">{{ successMessage }}</div>
+            </div>
+        </div>
+    </div>
 
-      <div class="flex items-center space-x-3">
+    <!-- ========================================================================= -->
+    <!-- TAB 1: WORKFLOWS LIST (Aba 1) -->
+    <!-- ========================================================================= -->
+    <div *ngIf="activeTab === 'workflows'" class="space-y-6">
+
+        <!-- Ticker Filter Toolbar -->
+        <div class="bg-gray-800 rounded-xl p-5 border border-gray-700 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <label for="tickerFilter" class="text-sm font-medium text-gray-300">
+                    Selecione o Ticker:
+                </label>
+                <select
+                        id="tickerFilter"
+                        [value]="selectedTicker"
+                        (change)="onTickerSelectChange($event)"
+                        class="rounded-lg border-gray-600 bg-gray-900 text-white font-semibold text-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer min-w-[160px]"
+                >
+                    <option *ngFor="let t of config.tickers" [value]="t">
+                        {{ t }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="flex items-center space-x-3">
         <span class="text-xs text-gray-400 bg-gray-900 px-3 py-1.5 rounded-lg border border-gray-700">
           Endpoint: <code class="text-indigo-300">GET /trading/workflow-decisions/{{ selectedTicker }}</code>
         </span>
-        <button
-          type="button"
-          (click)="loadWorkflowList(selectedTicker)"
-          class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white transition-colors"
-          title="Atualizar lista"
-        >
-          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Error Alert for List -->
-    <div *ngIf="listErrorMessage" class="rounded-md bg-red-900/50 border border-red-500 p-4">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
+                <button
+                        type="button"
+                        (click)="loadWorkflowList(selectedTicker)"
+                        class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white transition-colors"
+                        title="Atualizar lista"
+                >
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-200">Atenção</h3>
-          <div class="mt-1 text-sm text-red-300">{{ listErrorMessage }}</div>
+
+        <!-- Error Alert for List -->
+        <div *ngIf="listErrorMessage" class="rounded-md bg-red-900/50 border border-red-500 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-200">Atenção</h3>
+                    <div class="mt-1 text-sm text-red-300">{{ listErrorMessage }}</div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Loading State for List -->
-    <div *ngIf="isLoadingList" class="flex flex-col items-center justify-center py-16 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
-      <span class="mt-4 text-sm text-gray-300">Buscando workflows para {{ selectedTicker }}...</span>
-    </div>
+        <!-- Loading State for List -->
+        <div *ngIf="isLoadingList"
+             class="flex flex-col items-center justify-center py-16 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
+            <span class="mt-4 text-sm text-gray-300">Buscando workflows para {{ selectedTicker }}...</span>
+        </div>
 
-    <!-- Workflows List Table Card -->
-    <div *ngIf="!isLoadingList" class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
-      <!-- Card Header -->
-      <div class="p-5 border-b border-gray-700 flex justify-between items-center bg-gray-800/90">
-        <div class="flex items-center space-x-3">
-          <h3 class="text-lg font-semibold text-white">
-            Workflows Cadastrados — <span class="text-indigo-400 font-mono">{{ listTickerHeader }}</span>
-          </h3>
-          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-700 text-gray-300 border border-gray-600">
+        <!-- Workflows List Table Card -->
+        <div *ngIf="!isLoadingList" class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+            <!-- Card Header -->
+            <div class="p-5 border-b border-gray-700 flex justify-between items-center bg-gray-800/90">
+                <div class="flex items-center space-x-3">
+                    <h3 class="text-lg font-semibold text-white">
+                        Workflows Cadastrados — <span class="text-indigo-400 font-mono">{{ listTickerHeader }}</span>
+                    </h3>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-700 text-gray-300 border border-gray-600">
             TF: {{ listTimeFrameHeader }}
           </span>
-        </div>
-        <span class="text-xs text-gray-400 font-medium">
+                </div>
+                <span class="text-xs text-gray-400 font-medium">
           Total de Regras: <strong class="text-white">{{ workflowList.length }}</strong>
         </span>
-      </div>
+            </div>
 
-      <!-- Empty State -->
-      <div *ngIf="workflowList.length === 0" class="text-center py-12 px-4">
-        <svg class="mx-auto h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-        </svg>
-        <h4 class="mt-3 text-sm font-medium text-gray-300">Nenhum workflow cadastrado para {{ selectedTicker }}</h4>
-        <p class="mt-1 text-xs text-gray-400">Clique na aba <strong>Detail</strong> para cadastrar novas regras para este ticker.</p>
-        <div class="mt-5">
-          <button
-            type="button"
-            (click)="switchTab('detail')"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-colors"
-          >
-            Novo Workflow em Detail
-          </button>
-        </div>
-      </div>
+            <!-- Empty State -->
+            <div *ngIf="workflowList.length === 0" class="text-center py-12 px-4">
+                <svg class="mx-auto h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <h4 class="mt-3 text-sm font-medium text-gray-300">Nenhum workflow cadastrado
+                    para {{ selectedTicker }}</h4>
+                <p class="mt-1 text-xs text-gray-400">Clique na aba <strong>Detail</strong> para cadastrar novas regras
+                    para este ticker.</p>
+                <div class="mt-5">
+                    <button
+                            type="button"
+                            (click)="switchTab('detail')"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-colors"
+                    >
+                        Novo Workflow em Detail
+                    </button>
+                </div>
+            </div>
 
-      <!-- Table View -->
-      <div *ngIf="workflowList.length > 0" class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-700 text-left text-sm">
-          <thead class="bg-gray-900/80 text-gray-300 uppercase text-xs tracking-wider">
-            <tr>
-              <th scope="col" class="px-4 py-3.5 font-semibold">#</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Estratégia</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Etapa (Step)</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Campo (Field)</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Operador</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Valor</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Ação</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold">Grupo</th>
-              <th scope="col" class="px-4 py-3.5 font-semibold text-right">Ações</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-700 bg-gray-800 text-gray-200 font-normal">
-            <tr *ngFor="let item of workflowList; let idx = index" class="hover:bg-gray-750 transition-colors">
-              <td class="px-4 py-3.5 font-medium text-indigo-400">
-                #{{ idx + 1 }}
-              </td>
-              <td class="px-4 py-3.5 font-medium text-white">
-                {{ formatLabel(item.strategy) }}
-              </td>
-              <td class="px-4 py-3.5 text-xs text-gray-300">
-                {{ formatLabel(item.step) }}
-              </td>
-              <td class="px-4 py-3.5 font-mono text-xs text-amber-300">
-                {{ item.field }}
-              </td>
-              <td class="px-4 py-3.5 text-xs font-semibold text-indigo-300">
-                {{ formatLabel(item.operator) }}
-              </td>
-              <td class="px-4 py-3.5 font-mono text-xs text-emerald-300">
-                {{ item.value }}
-              </td>
-              <td class="px-4 py-3.5">
+            <!-- Table View -->
+            <div *ngIf="workflowList.length > 0" class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-700 text-left text-sm">
+                    <thead class="bg-gray-900/80 text-gray-300 uppercase text-xs tracking-wider">
+                    <tr>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">#</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Estratégia</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Etapa (Step)</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Campo (Field)</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Operador</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Valor</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Ação</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold">Grupo</th>
+                        <th scope="col" class="px-4 py-3.5 font-semibold text-right">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 bg-gray-800 text-gray-200 font-normal">
+                    <tr *ngFor="let item of workflowList; let idx = index" class="hover:bg-gray-750 transition-colors">
+                        <td class="px-4 py-3.5 font-medium text-indigo-400">
+                            #{{ idx + 1 }}
+                        </td>
+                        <td class="px-4 py-3.5 font-medium text-white">
+                            {{ formatLabel(item.strategy) }}
+                        </td>
+                        <td class="px-4 py-3.5 text-xs text-gray-300">
+                            {{ formatLabel(item.step) }}
+                        </td>
+                        <td class="px-4 py-3.5 font-mono text-xs text-amber-300">
+                            {{ item.field }}
+                        </td>
+                        <td class="px-4 py-3.5 text-xs font-semibold text-indigo-300">
+                            {{ formatLabel(item.operator) }}
+                        </td>
+                        <td class="px-4 py-3.5 font-mono text-xs text-emerald-300">
+                            {{ item.value }}
+                        </td>
+                        <td class="px-4 py-3.5">
                 <span
-                  class="px-2 py-0.5 rounded text-xs font-semibold"
-                  [ngClass]="{
+                        class="px-2 py-0.5 rounded text-xs font-semibold"
+                        [ngClass]="{
                     'bg-emerald-950 text-emerald-300 border border-emerald-800': item.action.includes('OPEN_LONG') || item.action.includes('OPEN_SHORT'),
                     'bg-rose-950 text-rose-300 border border-rose-800': item.action.includes('CLOSE_LONG') || item.action.includes('CLOSE_SHORT'),
                     'bg-gray-700 text-gray-300': !item.action.includes('OPEN') && !item.action.includes('CLOSE')
@@ -232,437 +243,673 @@
                 >
                   {{ formatLabel(item.action) }}
                 </span>
-              </td>
-              <td class="px-4 py-3.5 text-xs text-gray-400 font-mono font-semibold">
-                {{ item.groupId }}
-              </td>
-              
-              <!-- Rule 6: Action Icons (Edit & Delete placeholders) -->
-              <td class="px-4 py-3.5 text-right whitespace-nowrap">
-                <div class="flex items-center justify-end space-x-2">
-                  <!-- Edit Icon (Pencil) -->
-                  <button
-                    type="button"
-                    (click)="onEditItemPlaceholder(item, idx)"
-                    class="p-1.5 rounded-lg text-gray-400 hover:text-indigo-300 hover:bg-gray-700 transition-colors"
-                    title="Editar item do workflow"
-                  >
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
+                        </td>
+                        <td class="px-4 py-3.5 text-xs text-gray-400 font-mono font-semibold">
+                            {{ item.groupId }}
+                        </td>
 
-                  <!-- Delete Icon (Trash) -->
-                  <button
-                    type="button"
-                    (click)="openDeleteModal(item)"
-                    class="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-gray-700 transition-colors cursor-pointer"
-                    title="Excluir item do workflow"
-                  >
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <!-- Rule 6: Action Icons (Edit & Delete placeholders) -->
+                        <td class="px-4 py-3.5 text-right whitespace-nowrap">
+                            <div class="flex items-center justify-end space-x-2">
+                                <!-- Edit Icon (Pencil) -->
+                                <button
+                                        type="button"
+                                        (click)="onEditItemPlaceholder(item, idx)"
+                                        class="p-1.5 rounded-lg text-gray-400 hover:text-indigo-300 hover:bg-gray-700 transition-colors"
+                                        title="Editar item do workflow"
+                                >
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </button>
+
+                                <!-- Delete Icon (Trash) -->
+                                <button
+                                        type="button"
+                                        (click)="openDeleteModal(item)"
+                                        class="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-gray-700 transition-colors cursor-pointer"
+                                        title="Excluir item do workflow"
+                                >
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: DETAIL CREATION FORM (Aba 2) -->
+    <!-- ========================================================================= -->
+    <div *ngIf="activeTab === 'detail'" class="space-y-8">
+
+        <!-- Loading State for Config -->
+        <div *ngIf="isLoadingConfig"
+             class="flex flex-col items-center justify-center py-16 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+            <span class="mt-4 text-gray-300 font-medium">Carregando configurações do formulário...</span>
+        </div>
+
+        <!-- Error Messages in Form -->
+        <div *ngIf="errorMessage" class="rounded-md bg-red-900/50 border border-red-500 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clip-rule="evenodd"/>
                     </svg>
-                  </button>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ========================================================================= -->
-  <!-- TAB 2: DETAIL CREATION FORM (Aba 2) -->
-  <!-- ========================================================================= -->
-  <div *ngIf="activeTab === 'detail'" class="space-y-8">
-    
-    <!-- Loading State for Config -->
-    <div *ngIf="isLoadingConfig" class="flex flex-col items-center justify-center py-16 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-      <span class="mt-4 text-gray-300 font-medium">Carregando configurações do formulário...</span>
-    </div>
-
-    <!-- Error Messages in Form -->
-    <div *ngIf="errorMessage" class="rounded-md bg-red-900/50 border border-red-500 p-4">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-200">Atenção</h3>
-          <div class="mt-1 text-sm text-red-300">{{ errorMessage }}</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Workflow Form -->
-    <form *ngIf="!isLoadingConfig" [formGroup]="workflowForm" (ngSubmit)="onSubmit()" class="space-y-8">
-      
-      <!-- Top Level Workflow Config Card -->
-      <div class="bg-gray-800 shadow-xl rounded-xl border border-gray-700 p-6">
-        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <span class="h-2.5 w-2.5 bg-indigo-500 rounded-full"></span>
-          Parâmetros Principais do Workflow
-        </h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Tickers (Select Box) -->
-          <div>
-            <label for="ticker" class="block text-sm font-medium text-gray-300 mb-2">
-              1. Tickers (Par de Negociação) <span class="text-red-400">*</span>
-            </label>
-            <select
-              id="ticker"
-              formControlName="ticker"
-              class="block w-full rounded-lg border-gray-600 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border cursor-pointer"
-            >
-              <option value="" disabled>Selecione um ticker...</option>
-              <option *ngFor="let t of config.tickers" [value]="t">
-                {{ t }}
-              </option>
-            </select>
-            <p *ngIf="workflowForm.get('ticker')?.touched && workflowForm.get('ticker')?.invalid" class="mt-1 text-xs text-red-400">
-              Ticker é obrigatório.
-            </p>
-          </div>
-
-          <!-- TimeFrames (Select Box) -->
-          <div>
-            <label for="timeFrame" class="block text-sm font-medium text-gray-300 mb-2">
-              2. TimeFrames (Tempo Gráfico) <span class="text-red-400">*</span>
-            </label>
-            <select
-              id="timeFrame"
-              formControlName="timeFrame"
-              class="block w-full rounded-lg border-gray-600 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border cursor-pointer"
-            >
-              <option value="" disabled>Selecione o timeframe...</option>
-              <option *ngFor="let tf of config.timeFrames" [value]="tf">
-                {{ formatLabel(tf) }} ({{ tf }})
-              </option>
-            </select>
-            <p *ngIf="workflowForm.get('timeFrame')?.touched && workflowForm.get('timeFrame')?.invalid" class="mt-1 text-xs text-red-400">
-              Timeframe é obrigatório.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Decisions Section -->
-      <div class="bg-gray-800 shadow-xl rounded-xl border border-gray-700 p-6">
-        <div class="flex justify-between items-center mb-6">
-          <div>
-            <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-              <span class="h-2.5 w-2.5 bg-emerald-500 rounded-full"></span>
-              Regras de Decisão (Decisions)
-            </h3>
-            <p class="text-xs text-gray-400 mt-1">
-              Defina a sequência de condições executadas pelo bot.
-            </p>
-          </div>
-          <button
-            type="button"
-            (click)="addDecision()"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-150 cursor-pointer"
-          >
-            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Adicionar Decisão
-          </button>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-200">Atenção</h3>
+                    <div class="mt-1 text-sm text-red-300">{{ errorMessage }}</div>
+                </div>
+            </div>
         </div>
 
-        <div formArrayName="decisions" class="space-y-6">
-          <div
-            *ngFor="let decision of decisions.controls; let i = index"
-            [formGroupName]="i"
-            class="bg-gray-900 rounded-xl p-5 border border-gray-700 relative shadow-md transition-all hover:border-gray-600"
-          >
-            <!-- Card Header & Remove Button -->
-            <div class="flex justify-between items-center border-b border-gray-800 pb-3 mb-4">
+        <!-- Workflow Form -->
+        <form *ngIf="!isLoadingConfig" [formGroup]="workflowForm" (ngSubmit)="onSubmit()" class="space-y-8">
+
+            <!-- Top Level Workflow Config Card -->
+            <div class="bg-gray-800 shadow-xl rounded-xl border border-gray-700 p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <span class="h-2.5 w-2.5 bg-indigo-500 rounded-full"></span>
+                    Parâmetros Principais do Workflow
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Tickers (Select Box) -->
+                    <div>
+                        <label for="ticker" class="block text-sm font-medium text-gray-300 mb-2">
+                            1. Tickers (Par de Negociação) <span class="text-red-400">*</span>
+                        </label>
+                        <select
+                                id="ticker"
+                                formControlName="ticker"
+                                class="block w-full rounded-lg border-gray-600 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border cursor-pointer"
+                        >
+                            <option value="" disabled>Selecione um ticker...</option>
+                            <option *ngFor="let t of config.tickers" [value]="t">
+                                {{ t }}
+                            </option>
+                        </select>
+                        <p *ngIf="workflowForm.get('ticker')?.touched && workflowForm.get('ticker')?.invalid"
+                           class="mt-1 text-xs text-red-400">
+                            Ticker é obrigatório.
+                        </p>
+                    </div>
+
+                    <!-- TimeFrames (Select Box) -->
+                    <div>
+                        <label for="timeFrame" class="block text-sm font-medium text-gray-300 mb-2">
+                            2. TimeFrames (Tempo Gráfico) <span class="text-red-400">*</span>
+                        </label>
+                        <select
+                                id="timeFrame"
+                                formControlName="timeFrame"
+                                class="block w-full rounded-lg border-gray-600 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border cursor-pointer"
+                        >
+                            <option value="" disabled>Selecione o timeframe...</option>
+                            <option *ngFor="let tf of config.timeFrames" [value]="tf">
+                                {{ formatLabel(tf) }} ({{ tf }})
+                            </option>
+                        </select>
+                        <p *ngIf="workflowForm.get('timeFrame')?.touched && workflowForm.get('timeFrame')?.invalid"
+                           class="mt-1 text-xs text-red-400">
+                            Timeframe é obrigatório.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decisions Section -->
+            <div class="bg-gray-800 shadow-xl rounded-xl border border-gray-700 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                            <span class="h-2.5 w-2.5 bg-emerald-500 rounded-full"></span>
+                            Regras de Decisão (Decisions)
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Defina a sequência de condições executadas pelo bot.
+                        </p>
+                    </div>
+                    <button
+                            type="button"
+                            (click)="addDecision()"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-150 cursor-pointer"
+                    >
+                        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Adicionar Decisão
+                    </button>
+                </div>
+
+                <div formArrayName="decisions" class="space-y-6">
+                    <div
+                            *ngFor="let decision of decisions.controls; let i = index"
+                            [formGroupName]="i"
+                            class="bg-gray-900 rounded-xl p-5 border border-gray-700 relative shadow-md transition-all hover:border-gray-600"
+                    >
+                        <!-- Card Header & Remove Button -->
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-3 mb-4">
               <span class="text-sm font-semibold text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800">
                 Decisão #{{ i + 1 }}
               </span>
-              <button
-                *ngIf="decisions.length > 1"
-                type="button"
-                (click)="removeDecision(i)"
-                class="text-gray-400 hover:text-red-400 transition-colors p-1 rounded hover:bg-gray-800 cursor-pointer"
-                title="Remover Decisão"
-              >
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
-            </div>
+                            <button
+                                    *ngIf="decisions.length > 1"
+                                    type="button"
+                                    (click)="removeDecision(i)"
+                                    class="text-gray-400 hover:text-red-400 transition-colors p-1 rounded hover:bg-gray-800 cursor-pointer"
+                                    title="Remover Decisão"
+                            >
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
 
-            <!-- Fields Grid (Strict order according to Rule 3) -->
-            <!-- Order: fields, operators, values, steps, strategies, actions, groupsIds (+ logicalOperator, timeFrame) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              
-              <!-- 3. Fields (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Fields (Campo) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="field"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione um campo...</option>
-                  <option *ngFor="let f of config.fields" [value]="f">
-                    {{ formatLabel(f) }} ({{ f }})
-                  </option>
-                </select>
-              </div>
+                        <!-- Fields Grid (Strict order according to Rule 3) -->
+                        <!-- Order: fields, operators, values, steps, strategies, actions, groupsIds (+ logicalOperator, timeFrame) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-              <!-- 4. Operators (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Operators (Operador) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="operator"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione um operador...</option>
-                  <option *ngFor="let op of config.operators" [value]="op">
-                    {{ formatLabel(op) }}
-                  </option>
-                </select>
-              </div>
+                            <!-- 3. Fields (Select Box) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Fields (Campo) <span class="text-red-400">*</span>
+                                </label>
+                                <select
+                                        formControlName="field"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione um campo...</option>
+                                    <option *ngFor="let f of config.fields" [value]="f">
+                                        {{ formatLabel(f) }} ({{ f }})
+                                    </option>
+                                </select>
+                            </div>
 
-              <!-- 5. Values (Conditional Input Number vs Select Box based on Rule 3) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Values (Valor) <span class="text-red-400">*</span>
-                </label>
-                
-                <!-- Input Number mode when operator is GREATER_THAN or LESS_THAN -->
-                <input
-                  *ngIf="isNumberOperator(decision.get('operator')?.value)"
-                  type="number"
-                  step="any"
-                  formControlName="value"
-                  placeholder="Ex: 1.5"
-                  class="block w-full rounded-md border-indigo-500 bg-gray-800 text-white shadow-sm focus:border-indigo-400 focus:ring-indigo-400 text-sm p-2.5 border ring-1 ring-indigo-500"
-                />
+                            <!-- 4. Operators (Select Box) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Operators (Operador) <span class="text-red-400">*</span>
+                                </label>
+                                <select
+                                        formControlName="operator"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione um operador...</option>
+                                    <option *ngFor="let op of config.operators" [value]="op">
+                                        {{ formatLabel(op) }}
+                                    </option>
+                                </select>
+                            </div>
 
-                <!-- Select Box mode for any other operator -->
-                <select
-                  *ngIf="!isNumberOperator(decision.get('operator')?.value)"
-                  formControlName="value"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione o valor...</option>
-                  <option *ngFor="let v of config.values" [value]="v">
-                    {{ formatLabel(v) }}
-                  </option>
-                </select>
-              </div>
+                            <!-- 5. Values (Conditional Input Number vs Select Box based on Rule 3) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Values (Valor) <span class="text-red-400">*</span>
+                                </label>
 
-              <!-- 6. Steps (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Steps (Etapa) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="step"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione a etapa...</option>
-                  <option *ngFor="let st of config.steps" [value]="st">
-                    {{ formatLabel(st) }}
-                  </option>
-                </select>
-              </div>
+                                <!-- Input Number mode when operator is GREATER_THAN or LESS_THAN -->
+                                <input
+                                        *ngIf="isNumberOperator(decision.get('operator')?.value)"
+                                        type="number"
+                                        step="any"
+                                        formControlName="value"
+                                        placeholder="Ex: 1.5"
+                                        class="block w-full rounded-md border-indigo-500 bg-gray-800 text-white shadow-sm focus:border-indigo-400 focus:ring-indigo-400 text-sm p-2.5 border ring-1 ring-indigo-500"
+                                />
 
-              <!-- 7. Strategies (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Strategies (Estratégia) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="strategy"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione a estratégia...</option>
-                  <option *ngFor="let strat of config.strategies" [value]="strat">
-                    {{ formatLabel(strat) }}
-                  </option>
-                </select>
-              </div>
+                                <!-- Select Box mode for any other operator -->
+                                <select
+                                        *ngIf="!isNumberOperator(decision.get('operator')?.value)"
+                                        formControlName="value"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione o valor...</option>
+                                    <option *ngFor="let v of config.values" [value]="v">
+                                        {{ formatLabel(v) }}
+                                    </option>
+                                </select>
+                            </div>
 
-              <!-- 8. StrategyType (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Strategy Type (Tipo de Estratégia) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="strategyType"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione o tipo de estratégia...</option>
-                  <option *ngFor="let stType of (config.strategiesType || config.strategies)" [value]="stType">
-                    {{ formatLabel(stType) }}
-                  </option>
-                </select>
-              </div>
+                            <!-- 6. Steps (Select Box) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Steps (Etapa) <span class="text-red-400">*</span>
+                                </label>
+                                <select
+                                        formControlName="step"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione a etapa...</option>
+                                    <option *ngFor="let st of config.steps" [value]="st">
+                                        {{ formatLabel(st) }}
+                                    </option>
+                                </select>
+                            </div>
 
-              <!-- 9. Actions (Select Box) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  Actions (Ação) <span class="text-red-400">*</span>
-                </label>
-                <select
-                  formControlName="action"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
-                >
-                  <option value="" disabled>Selecione a ação...</option>
-                  <option *ngFor="let act of config.actions" [value]="act">
-                    {{ formatLabel(act) }}
-                  </option>
-                </select>
-              </div>
+                            <!-- 7. Strategies (Select Box) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Strategies (Estratégia) <span class="text-red-400">*</span>
+                                </label>
+                                <select
+                                        formControlName="strategy"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione a estratégia...</option>
+                                    <option *ngFor="let strat of config.strategies" [value]="strat">
+                                        {{ formatLabel(strat) }}
+                                    </option>
+                                </select>
+                            </div>
 
-              <!-- 10. GroupId (Integer Input) -->
-              <div>
-                <label class="block text-xs font-medium text-gray-300 mb-1">
-                  GroupId (Grupo ID) <span class="text-red-400">*</span>
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  formControlName="groupId"
-                  placeholder="Ex: 1"
-                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
-                />
-              </div>
+                            <!-- 8. StrategyType (Select Box) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Strategy Type (Tipo de Estratégia) <span class="text-red-400">*</span>
+                                </label>
+                                <select
+                                        formControlName="strategyType"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione o tipo de estratégia...</option>
+                                    <option *ngFor="let stType of (config.strategiesType || config.strategies)"
+                                            [value]="stType">
+                                        {{ formatLabel(stType) }}
+                                    </option>
+                                </select>
+                            </div>
 
-              <!-- Logical Operator (Select Box) -->
-<!--              <div>-->
-<!--                <label class="block text-xs font-medium text-gray-300 mb-1">-->
-<!--                  Logical Operator (Operador Lógico) <span class="text-red-400">*</span>-->
-<!--                </label>-->
-<!--                <select-->
-<!--                  formControlName="logicalOperator"-->
-<!--                  class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"-->
-<!--                >-->
-<!--                  <option value="" disabled>Selecione operador lógico...</option>-->
-<!--                  <option *ngFor="let lo of config.logicalOperators" [value]="lo">-->
-<!--                    {{ lo }}-->
-<!--                  </option>-->
-<!--                </select>-->
-<!--              </div>-->
+                            <!-- 9. Actions (Select Box) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    Actions (Ação) <span class="text-red-400">*</span>
+                                </label>
+                                <select
+                                        formControlName="action"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option value="" disabled>Selecione a ação...</option>
+                                    <option *ngFor="let act of config.actions" [value]="act">
+                                        {{ formatLabel(act) }}
+                                    </option>
+                                </select>
+                            </div>
 
-            </div>
-          </div>
-        </div>
-      </div>
+                            <!-- 10. GroupId (Integer Input) -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">
+                                    GroupId (Grupo ID) <span class="text-red-400">*</span>
+                                </label>
+                                <input
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        formControlName="groupId"
+                                        placeholder="Ex: 1"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
+                                />
+                            </div>
 
-      <!-- Actions & Submit Section -->
-      <div class="flex items-center justify-end space-x-4">
-        <button
-          type="submit"
-          [disabled]="isSubmitting"
-          class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 transition-all duration-150 cursor-pointer"
-        >
-          <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          {{ isSubmitting ? 'Cadastrando Workflow...' : 'Salvar Workflow Decision' }}
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Delete Confirmation Modal -->
-  <div *ngIf="showDeleteModal" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <!-- Overlay Backdrop -->
-    <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm transition-opacity" (click)="closeDeleteModal()"></div>
-
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-        <div class="relative transform overflow-hidden rounded-2xl bg-gray-800 border border-gray-700 px-4 pb-4 pt-5 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-          
-          <!-- Close (X) Button -->
-          <div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-            <button
-              type="button"
-              (click)="closeDeleteModal()"
-              class="rounded-lg bg-gray-800 text-gray-400 hover:text-gray-200 focus:outline-none p-1 transition-colors"
-            >
-              <span class="sr-only">Fechar</span>
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          <div class="sm:flex sm:items-start">
-            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-950/80 border border-rose-800 sm:mx-0 sm:h-10 sm:w-10">
-              <svg class="h-6 w-6 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </div>
-            
-            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-              <h3 class="text-lg font-semibold leading-6 text-white" id="modal-title">
-                Confirmar Exclusão de Workflow Decision
-              </h3>
-              
-              <div class="mt-3 text-sm text-gray-300 space-y-2">
-                <p>Tem certeza que deseja excluir esta regra de decisão?</p>
-                <div *ngIf="itemToDelete" class="bg-gray-900/90 rounded-lg p-3 border border-gray-700 text-xs font-mono text-gray-300 space-y-1">
-                  <div *ngIf="itemToDelete.id"><span class="text-gray-400">ID:</span> <span class="text-white font-bold">#{{ itemToDelete.id }}</span></div>
-                  <div><span class="text-gray-400">Estratégia:</span> <span class="text-indigo-300">{{ itemToDelete.strategy }}</span></div>
-                  <div><span class="text-gray-400">Campo:</span> <span class="text-amber-300">{{ itemToDelete.field }}</span> {{ itemToDelete.operator }} <span class="text-emerald-300">{{ itemToDelete.value }}</span></div>
-                  <div><span class="text-gray-400">Ação:</span> <span class="text-gray-200">{{ itemToDelete.action }}</span></div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <!-- Error inside modal if any -->
-              <div *ngIf="deleteErrorMessage" class="mt-3 rounded-md bg-red-900/50 border border-red-500 p-3 text-xs text-red-200">
-                {{ deleteErrorMessage }}
-              </div>
             </div>
-          </div>
 
-          <!-- Buttons: Sim & Não -->
-          <div class="mt-6 sm:mt-5 sm:flex sm:flex-row-reverse gap-3">
-            <!-- Sim (Confirm Delete) -->
-            <button
-              type="button"
-              (click)="confirmDelete()"
-              [disabled]="isDeleting"
-              class="inline-flex w-full justify-center rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:opacity-50 sm:w-auto transition-colors cursor-pointer"
-            >
-              <svg *ngIf="isDeleting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              {{ isDeleting ? 'Excluindo...' : 'Sim' }}
-            </button>
-            
-            <!-- Não (Cancel & Close) -->
-            <button
-              type="button"
-              (click)="closeDeleteModal()"
-              [disabled]="isDeleting"
-              class="mt-3 inline-flex w-full justify-center rounded-lg bg-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 shadow-sm hover:bg-gray-600 sm:mt-0 sm:w-auto transition-colors cursor-pointer"
-            >
-              Não
-            </button>
-          </div>
-
-        </div>
-      </div>
+            <!-- Actions & Submit Section -->
+            <div class="flex items-center justify-end space-x-4">
+                <button
+                        type="submit"
+                        [disabled]="isSubmitting"
+                        class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 transition-all duration-150 cursor-pointer"
+                >
+                    <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none"
+                         viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {{ isSubmitting ? 'Cadastrando Workflow...' : 'Salvar Workflow Decision' }}
+                </button>
+            </div>
+        </form>
     </div>
-  </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div *ngIf="showDeleteModal" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Overlay Backdrop -->
+        <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm transition-opacity"
+             (click)="closeDeleteModal()"></div>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-2xl bg-gray-800 border border-gray-700 px-4 pb-4 pt-5 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+
+                    <!-- Close (X) Button -->
+                    <div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+                        <button
+                                type="button"
+                                (click)="closeDeleteModal()"
+                                class="rounded-lg bg-gray-800 text-gray-400 hover:text-gray-200 focus:outline-none p-1 transition-colors"
+                        >
+                            <span class="sr-only">Fechar</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rose-950/80 border border-rose-800 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </div>
+
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg font-semibold leading-6 text-white" id="modal-title">
+                                Confirmar Exclusão de Workflow Decision
+                            </h3>
+
+                            <div class="mt-3 text-sm text-gray-300 space-y-2">
+                                <p>Tem certeza que deseja excluir esta regra de decisão?</p>
+                                <div *ngIf="itemToDelete"
+                                     class="bg-gray-900/90 rounded-lg p-3 border border-gray-700 text-xs font-mono text-gray-300 space-y-1">
+                                    <div *ngIf="itemToDelete.id"><span class="text-gray-400">ID:</span> <span
+                                            class="text-white font-bold">#{{ itemToDelete.id }}</span></div>
+                                    <div><span class="text-gray-400">Estratégia:</span> <span
+                                            class="text-indigo-300">{{ itemToDelete.strategy }}</span></div>
+                                    <div><span class="text-gray-400">Campo:</span> <span
+                                            class="text-amber-300">{{ itemToDelete.field }}</span> {{ itemToDelete.operator }}
+                                        <span class="text-emerald-300">{{ itemToDelete.value }}</span></div>
+                                    <div><span class="text-gray-400">Ação:</span> <span
+                                            class="text-gray-200">{{ itemToDelete.action }}</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Error inside modal if any -->
+                            <div *ngIf="deleteErrorMessage"
+                                 class="mt-3 rounded-md bg-red-900/50 border border-red-500 p-3 text-xs text-red-200">
+                                {{ deleteErrorMessage }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons: Sim & Não -->
+                    <div class="mt-6 sm:mt-5 sm:flex sm:flex-row-reverse gap-3">
+                        <!-- Sim (Confirm Delete) -->
+                        <button
+                                type="button"
+                                (click)="confirmDelete()"
+                                [disabled]="isDeleting"
+                                class="inline-flex w-full justify-center rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-500 disabled:opacity-50 sm:w-auto transition-colors cursor-pointer"
+                        >
+                            <svg *ngIf="isDeleting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                                 fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            {{ isDeleting ? 'Excluindo...' : 'Sim' }}
+                        </button>
+
+                        <!-- Não (Cancel & Close) -->
+                        <button
+                                type="button"
+                                (click)="closeDeleteModal()"
+                                [disabled]="isDeleting"
+                                class="mt-3 inline-flex w-full justify-center rounded-lg bg-gray-700 px-4 py-2.5 text-sm font-semibold text-gray-200 shadow-sm hover:bg-gray-600 sm:mt-0 sm:w-auto transition-colors cursor-pointer"
+                        >
+                            Não
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Workflow Decision Modal -->
+    <div *ngIf="showEditModal" class="relative z-50" aria-labelledby="edit-modal-title" role="dialog" aria-modal="true">
+        <!-- Overlay Backdrop -->
+        <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm transition-opacity" (click)="closeEditModal()"></div>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-2xl bg-gray-800 border border-gray-700 px-4 pb-4 pt-5 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
+
+                    <!-- Close Button (X) -->
+                    <div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+                        <button
+                                type="button"
+                                (click)="closeEditModal()"
+                                class="rounded-lg bg-gray-800 text-gray-400 hover:text-gray-200 focus:outline-none p-1 transition-colors"
+                        >
+                            <span class="sr-only">Fechar</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Header -->
+                    <div class="flex items-center space-x-3 border-b border-gray-700 pb-4 mb-4">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-950/80 border border-indigo-800">
+                            <svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white" id="edit-modal-title">
+                                Editar Workflow Decision
+                            </h3>
+                            <p class="text-xs text-gray-400">
+                                Altere os parâmetros da regra de decisão #{{ itemToEdit?.id ?? '' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Error inside Edit Modal -->
+                    <div *ngIf="editErrorMessage"
+                         class="mb-4 rounded-md bg-red-900/50 border border-red-500 p-3 text-xs text-red-200">
+                        {{ editErrorMessage }}
+                    </div>
+
+                    <!-- Form inside Edit Modal -->
+                    <form [formGroup]="editForm" (ngSubmit)="confirmEdit()" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                            <!-- Strategy -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Estratégia <span
+                                        class="text-red-400">*</span></label>
+                                <select
+                                        formControlName="strategy"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option *ngFor="let strat of config.strategies"
+                                            [value]="strat">{{ formatLabel(strat) }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- StrategyType -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Tipo de Estratégia <span
+                                        class="text-red-400">*</span></label>
+                                <select
+                                        formControlName="strategyType"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option *ngFor="let stType of (config.strategiesType || config.strategies)"
+                                            [value]="stType">{{ formatLabel(stType) }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Field -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Campo (Field) <span
+                                        class="text-red-400">*</span></label>
+                                <input
+                                        type="text"
+                                        formControlName="field"
+                                        list="fields-list"
+                                        placeholder="Digite ou selecione..."
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
+                                />
+                            </div>
+
+                            <!-- Operator -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Operador <span
+                                        class="text-red-400">*</span></label>
+                                <select
+                                        formControlName="operator"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option *ngFor="let op of config.operators" [value]="op">{{ formatLabel(op) }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Value -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Valor <span
+                                        class="text-red-400">*</span></label>
+                                <input
+                                        *ngIf="isNumberOperator(editForm.get('operator')?.value)"
+                                        type="number"
+                                        step="any"
+                                        formControlName="value"
+                                        placeholder="Ex: 1.5"
+                                        class="block w-full rounded-md border-indigo-500 bg-gray-900 text-white shadow-sm focus:border-indigo-400 focus:ring-indigo-400 text-sm p-2.5 border ring-1 ring-indigo-500"
+                                />
+                                <input
+                                        *ngIf="!isNumberOperator(editForm.get('operator')?.value)"
+                                        type="text"
+                                        formControlName="value"
+                                        list="values-list"
+                                        placeholder="Digite ou selecione..."
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
+                                />
+                            </div>
+
+                            <!-- Step -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Etapa (Step) <span
+                                        class="text-red-400">*</span></label>
+                                <select
+                                        formControlName="step"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option *ngFor="let st of config.steps" [value]="st">{{ formatLabel(st) }}</option>
+                                </select>
+                            </div>
+
+                            <!-- Action -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Ação <span
+                                        class="text-red-400">*</span></label>
+                                <select
+                                        formControlName="action"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option *ngFor="let act of config.actions" [value]="act">{{ formatLabel(act) }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- GroupId -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Grupo ID <span
+                                        class="text-red-400">*</span></label>
+                                <input
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        formControlName="groupId"
+                                        placeholder="Ex: 1"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm 
+                                        focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
+                                />
+                            </div>
+
+                            <!-- TimeFrame -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">TimeFrame <span
+                                        class="text-red-400">*</span></label>
+                                <select
+                                        formControlName="timeFrame"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border cursor-pointer"
+                                >
+                                    <option *ngFor="let tf of config.timeFrames" [value]="tf">{{ formatLabel(tf) }}
+                                        ({{ tf }})
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- TickerId -->
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1">TickerId <span
+                                        class="text-red-400">*</span></label>
+                                <input
+                                        type="text"
+                                        formControlName="tickerId"
+                                        class="block w-full rounded-md border-gray-700 bg-gray-900 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2.5 border"
+                                />
+                            </div>
+
+                        </div>
+
+                        <!-- Modal Footer Buttons -->
+                        <div class="mt-6 sm:mt-5 sm:flex sm:flex-row-reverse gap-3 pt-4 border-t border-gray-700">
+                            <button
+                                    type="submit"
+                                    [disabled]="isUpdating"
+                                    class="inline-flex w-full justify-center rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 sm:w-auto transition-colors cursor-pointer"
+                            >
+                                <svg *ngIf="isUpdating" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block"
+                                     fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                {{ isUpdating ? 'Salvando...' : 'Salvar Alterações' }}
+                            </button>
+
+                            <button
+                                    type="button"
+                                    (click)="closeEditModal()"
+                                    [disabled]="isUpdating"
+                                    class="mt-3 inline-flex w-full justify-center rounded-lg bg-gray-700 px-5 py-2.5 text-sm font-semibold text-gray-200 shadow-sm hover:bg-gray-600 sm:mt-0 sm:w-auto transition-colors cursor-pointer"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

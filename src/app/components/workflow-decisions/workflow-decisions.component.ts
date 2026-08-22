@@ -92,8 +92,7 @@ export class WorkflowDecisionsComponent implements OnInit {
       'HIGHER_TIMEFRAME'
     ],
     tickers: ['BTCUSDT', 'ETHUSDT', 'HYPEUSDT', 'SOLUSDT'],
-    timeFrames: ['60', 'D'],
-    logicalOperators: ['AND', 'OR', 'NONE']
+    timeFrames: ['60', 'D']
   };
 
   // State for Form Creation (Tab 2: Detail)
@@ -117,6 +116,13 @@ export class WorkflowDecisionsComponent implements OnInit {
   itemToDelete: WorkflowDecisionItem | null = null;
   isDeleting: boolean = false;
   deleteErrorMessage: string = '';
+
+  // State for Edit Modal
+  showEditModal: boolean = false;
+  itemToEdit: WorkflowDecisionItem | null = null;
+  editForm!: FormGroup;
+  isUpdating: boolean = false;
+  editErrorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -158,7 +164,6 @@ export class WorkflowDecisionsComponent implements OnInit {
       strategyType: [initialValues?.strategyType ?? defaultStrategyType, Validators.required],
       action: [initialValues?.action ?? (this.config.actions[0] || 'DEFAULT'), Validators.required],
       groupId: [initialValues?.groupId ?? 1, [Validators.required, Validators.min(0)]],
-      logicalOperator: [initialValues?.logicalOperator ?? 'OR', Validators.required],
       timeFrame: [initialValues?.timeFrame ?? defaultTimeFrame, Validators.required]
     });
   }
@@ -240,10 +245,7 @@ export class WorkflowDecisionsComponent implements OnInit {
             strategiesType: strategiesType,
             steps: ensureArray(rawConfig.steps).length ? rawConfig.steps : this.config.steps,
             tickers: ensureArray(rawConfig.tickers).length ? rawConfig.tickers : this.config.tickers,
-            timeFrames: ensureArray(rawConfig.timeFrames).length ? rawConfig.timeFrames : this.config.timeFrames,
-            logicalOperators: ensureArray(rawConfig.logicalOperators).length > 0 
-              ? rawConfig.logicalOperators 
-              : ['AND', 'OR', 'NONE']
+            timeFrames: ensureArray(rawConfig.timeFrames).length ? rawConfig.timeFrames : this.config.timeFrames
           };
 
           if (this.config.tickers.length > 0 && !this.workflowForm.get('ticker')?.value) {
@@ -345,8 +347,103 @@ export class WorkflowDecisionsComponent implements OnInit {
       .join(' ');
   }
 
-  onEditItemPlaceholder(item: WorkflowDecisionItem, index: number): void {
-    console.log('Edit item clicked (placeholder):', item, index);
+  onEditItemPlaceholder(item: WorkflowDecisionItem, index?: number): void {
+    this.openEditModal(item);
+  }
+
+  initEditForm(item: WorkflowDecisionItem): void {
+    const defaultStrategyType = (this.config.strategiesType && this.config.strategiesType.length > 0)
+      ? this.config.strategiesType[0]
+      : (this.config.strategies.length > 0 ? this.config.strategies[0] : 'DEFAULT');
+
+    this.editForm = this.fb.group({
+      id: [item.id],
+      tickerId: item.tickerId,
+      ticker: item.ticker,
+      strategy: [item.strategy || (this.config.strategies[0] || 'DEFAULT'), Validators.required],
+      strategyType: [item.strategyType || defaultStrategyType, Validators.required],
+      timeFrame: [item.timeFrame || '60', Validators.required],
+      field: [item.field || (this.config.fields[0] || 'EMA_9'), Validators.required],
+      operator: [item.operator || (this.config.operators[0] || 'EQUALS'), Validators.required],
+      value: [item.value || (this.config.values[0] || 'NONE'), Validators.required],
+      step: [item.step || (this.config.steps[0] || 'MAIN_TIMEFRAME'), Validators.required],
+      action: [item.action || (this.config.actions[0] || 'DEFAULT'), Validators.required],
+      groupId: [item.groupId ?? 1, [Validators.required, Validators.min(0)]]
+    });
+  }
+
+  openEditModal(item: WorkflowDecisionItem): void {
+    this.itemToEdit = item;
+    this.initEditForm(item);
+    this.showEditModal = true;
+    this.editErrorMessage = '';
+    this.cdr.markForCheck();
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.itemToEdit = null;
+    this.isUpdating = false;
+    this.editErrorMessage = '';
+    this.cdr.markForCheck();
+  }
+
+  confirmEdit(): void {
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      this.editErrorMessage = 'Por favor, preencha todos os campos obrigatórios.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    const formValues = this.editForm.getRawValue();
+    const id = formValues.id || this.itemToEdit?.id;
+
+    if (id === undefined || id === null) {
+      console.warn('Item selecionado para edição não possui ID válido.');
+      this.closeEditModal();
+      return;
+    }
+
+    this.isUpdating = true;
+    this.editErrorMessage = '';
+    this.cdr.markForCheck();
+
+    const payload: Partial<WorkflowDecisionItem> = {
+      id: id,
+      strategy: formValues.strategy,
+      ticker: formValues.ticker,
+      tickerId: formValues.tickerId,
+      strategyType: formValues.strategyType,
+      timeFrame: formValues.timeFrame,
+      field: formValues.field,
+      value: String(formValues.value),
+      operator: formValues.operator,
+      groupId: Number(formValues.groupId),
+      action: formValues.action,
+      step: formValues.step
+    };
+
+    this.workflowDecisionService.updateWorkflowDecision(id, payload).subscribe({
+      next: (response: any) => {
+        this.isUpdating = false;
+        const status = response?.status;
+        if (status === 200 || status === 204 || response === null || response === undefined || response?.success !== false) {
+          this.successMessage = `Workflow Decision #${id} atualizado com sucesso!`;
+          this.closeEditModal();
+          this.loadWorkflowList(this.selectedTicker);
+        } else {
+          this.closeEditModal();
+          this.loadWorkflowList(this.selectedTicker);
+        }
+      },
+      error: (err) => {
+        console.error(`Erro ao atualizar Workflow Decision #${id}:`, err);
+        this.editErrorMessage = `Falha ao atualizar o Workflow Decision #${id}. Verifique a API PUT localhost:8080/trading/workflow-decisions/${id}`;
+        this.isUpdating = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onDeleteItemPlaceholder(item: WorkflowDecisionItem, index: number): void {
@@ -436,7 +533,6 @@ export class WorkflowDecisionsComponent implements OnInit {
         value: String(item.value),
         operator: item.operator,
         groupId: Number(item.groupId),
-        logicalOperator: item.logicalOperator,
         action: item.action,
         step: item.step
       }))

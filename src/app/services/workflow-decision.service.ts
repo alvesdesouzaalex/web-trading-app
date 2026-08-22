@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { WdConfiguration, WorkflowDecisionCreatePayload } from '../models/workflow-decision.model';
+import { WdConfiguration, WorkflowDecisionCreatePayload, WorkflowDecisionItem } from '../models/workflow-decision.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +28,9 @@ export class WorkflowDecisionService {
 
   deleteWorkflowDecisionsById(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { observe: 'response' });
+  }
+
+  updateWorkflowDecision(id: number, payload: Partial<WorkflowDecisionItem>): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/${id}`, payload, { observe: 'response' });
   }
 }

@@ -9,11 +9,12 @@ export interface WdConfiguration {
   steps: string[];
   tickers: string[];
   timeFrames: string[];
-  logicalOperators?: string[];
 }
 
 export interface WorkflowDecisionItem {
   id?: number;
+  tickerId: string;
+  ticker: string;
   strategy: string;
   strategyType: string;
   timeFrame: string;
@@ -21,7 +22,6 @@ export interface WorkflowDecisionItem {
   value: string;
   operator: string;
   groupId: number;
-  logicalOperator: string;
   action: string;
   step: string;
 }
