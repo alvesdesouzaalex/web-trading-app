@@ -20,8 +20,7 @@ describe('WorkflowDecisionsComponent', () => {
     strategiesType: ['DEFAULT', 'RSI_STRATEGY'],
     steps: ['MAIN_TIMEFRAME', 'PRE_VALIDATION'],
     tickers: ['BTCUSDT', 'ETHUSDT'],
-    timeFrames: ['60', 'D'],
-    logicalOperators: ['AND', 'OR']
+    timeFrames: ['60', 'D']
   };
 
   const mockWorkflowListResponse = {
@@ -29,14 +28,16 @@ describe('WorkflowDecisionsComponent', () => {
     timeFrame: '60',
     decisions: [
       {
+        id: 15,
         strategy: 'RSI_STRATEGY',
         strategyType: 'RSI_STRATEGY',
         timeFrame: '60',
+        ticker: 'BTCUSDT', 
+        tickerId: 'BTCUSDT',
         field: 'minDistancePercent',
         value: '1.5',
         operator: 'GREATER_THAN',
         groupId: 1,
-        logicalOperator: 'OR',
         action: 'OPEN_LONG_POSITION',
         step: 'MAIN_TIMEFRAME'
       }
@@ -59,6 +60,8 @@ describe('WorkflowDecisionsComponent', () => {
     vi.spyOn(service, 'getConfiguration').mockReturnValue(of(mockConfig));
     vi.spyOn(service, 'getWorkflowDecisionsByTicker').mockReturnValue(of(mockWorkflowListResponse));
     vi.spyOn(service, 'createWorkflowDecision').mockReturnValue(of({ success: true }));
+    vi.spyOn(service, 'updateWorkflowDecision').mockReturnValue(of({ status: 200 }));
+    vi.spyOn(service, 'deleteWorkflowDecisionsById').mockReturnValue(of({ status: 204 }));
 
     fixture.detectChanges();
   });
@@ -96,7 +99,6 @@ describe('WorkflowDecisionsComponent', () => {
       strategyType: 'RSI_STRATEGY',
       action: 'OPEN_LONG_POSITION',
       groupId: 5,
-      logicalOperator: 'OR',
       timeFrame: '60'
     });
 
@@ -116,7 +118,6 @@ describe('WorkflowDecisionsComponent', () => {
           value: 'NONE',
           operator: 'EQUALS',
           groupId: 5,
-          logicalOperator: 'OR',
           action: 'OPEN_LONG_POSITION',
           step: 'MAIN_TIMEFRAME'
         }
@@ -124,8 +125,52 @@ describe('WorkflowDecisionsComponent', () => {
     });
   });
 
+  it('should open edit modal populated with item details and cancel cleanly', () => {
+    const item = mockWorkflowListResponse.decisions[0];
+    component.openEditModal(item);
+
+    expect(component.showEditModal).toBe(true);
+    expect(component.itemToEdit).toEqual(item);
+    expect(component.editForm.get('field')?.value).toBe('minDistancePercent');
+
+    component.closeEditModal();
+    expect(component.showEditModal).toBe(false);
+    expect(component.itemToEdit).toBeNull();
+  });
+
+  it('should update workflow decision via PUT: /trading/workflow-decisions/{id} and refresh list upon save', () => {
+    const item = mockWorkflowListResponse.decisions[0];
+    const loadListSpy = vi.spyOn(component, 'loadWorkflowList');
+
+    component.openEditModal(item);
+    component.editForm.patchValue({
+      field: 'EMA_21',
+      groupId: 2
+    });
+
+    component.confirmEdit();
+
+    expect(service.updateWorkflowDecision).toHaveBeenCalledWith(15, {
+      id: 15,
+      strategy: 'RSI_STRATEGY',
+      strategyType: 'RSI_STRATEGY',
+      ticker: 'BTCUSDT',
+      tickerId: 'BTCUSDT',
+      timeFrame: '60',
+      field: 'EMA_21',
+      value: '1.5',
+      operator: 'GREATER_THAN',
+      groupId: 2,
+      action: 'OPEN_LONG_POSITION',
+      step: 'MAIN_TIMEFRAME'
+    });
+    expect(component.showEditModal).toBe(false);
+    expect(loadListSpy).toHaveBeenCalledWith('BTCUSDT');
+    expect(component.successMessage).toContain('atualizado com sucesso');
+  });
+
   it('should open delete confirmation modal when delete action is triggered and close on Nao', () => {
-    const item = { id: 10, strategy: 'RSI_STRATEGY', strategyType: 'RSI_STRATEGY', timeFrame: '60', field: 'EMA_9', value: 'NONE', operator: 'EQUALS', groupId: 1, logicalOperator: 'OR', action: 'DEFAULT', step: 'MAIN_TIMEFRAME' };
+    const item = { id: 10, ticker: 'BTCUSDT', tickerId: 'BTCUSDT', strategy: 'RSI_STRATEGY', strategyType: 'RSI_STRATEGY', timeFrame: '60', field: 'EMA_9', value: 'NONE', operator: 'EQUALS', groupId: 1, action: 'DEFAULT', step: 'MAIN_TIMEFRAME' };
     component.openDeleteModal(item);
     expect(component.showDeleteModal).toBe(true);
     expect(component.itemToDelete).toEqual(item);
@@ -136,8 +181,7 @@ describe('WorkflowDecisionsComponent', () => {
   });
 
   it('should call deleteWorkflowDecisionsById and refresh workflow list when Sim is clicked and 204 is returned', () => {
-    const item = { id: 42, strategy: 'RSI_STRATEGY', strategyType: 'RSI_STRATEGY', timeFrame: '60', field: 'minDistancePercent', value: '1.5', operator: 'GREATER_THAN', groupId: 1, logicalOperator: 'OR', action: 'DEFAULT', step: 'MAIN_TIMEFRAME' };
-    vi.spyOn(service, 'deleteWorkflowDecisionsById').mockReturnValue(of({ status: 204 }));
+    const item = { id: 42, ticker: 'BTCUSDT', tickerId: 'BTCUSDT', strategy: 'RSI_STRATEGY', strategyType: 'RSI_STRATEGY', timeFrame: '60', field: 'minDistancePercent', value: '1.5', operator: 'GREATER_THAN', groupId: 1, action: 'DEFAULT', step: 'MAIN_TIMEFRAME' };
     const loadListSpy = vi.spyOn(component, 'loadWorkflowList');
 
     component.openDeleteModal(item);
